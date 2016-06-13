@@ -9,12 +9,33 @@
 		<param-value>/WEB-INF/spring/root-context.xml</param-value>
 	</context-param>
 
+	<context-param>
+	  <param-name>org.togglz.core.manager.TogglzConfig</param-name>
+	  <param-value>com.homedepot.interns.MyTogglzConfiguration</param-value>
+	</context-param>
+	
+	<context-param>
+	  <param-name>org.togglz.FEATURE_MANAGER_PROVIDED</param-name>
+	  <param-value>false</param-value>
+	</context-param> 
+	
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
+
+	<!-- Togglz configuration for Servlet 2.5 and earlier -->
+	<filter>
+	  <filter-name>TogglzFilter</filter-name>
+	  <filter-class>org.togglz.servlet.TogglzFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	  <filter-name>TogglzFilter</filter-name>
+	  <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 	<!-- Processes application requests -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>
@@ -25,6 +46,15 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	<servlet>
+	  <servlet-name>TogglzConsoleServlet</servlet-name>
+	  <servlet-class>org.togglz.console.TogglzConsoleServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>TogglzConsoleServlet</servlet-name>
+	  <url-pattern>/togglz/*</url-pattern>
+	</servlet-mapping>	
 		
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>

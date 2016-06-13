@@ -15,6 +15,33 @@
 	</properties>
 	<dependencies>
 	
+	<!-- Togglz core module (mandatory) -->
+		<dependency>
+		  <groupId>org.togglz</groupId>
+		  <artifactId>togglz-core</artifactId>
+		  <version>2.3.0.RC1</version>
+		</dependency>
+		
+		<!-- Togglz for Servlet environments (mandatory for webapps) -->
+		<dependency>
+		  <groupId>org.togglz</groupId>
+		  <artifactId>togglz-servlet</artifactId>
+		  <version>2.3.0.RC1</version>
+		</dependency>
+		
+		<!-- Spring integration (optional) -->
+		<dependency>
+		  <groupId>org.togglz</groupId>
+		  <artifactId>togglz-spring-web</artifactId>
+		  <version>2.3.0.RC1</version>
+		</dependency>
+		<!-- Togglz Admin Console -->
+		<dependency>
+		  <groupId>org.togglz</groupId>
+		  <artifactId>togglz-console</artifactId>
+		  <version>2.3.0.RC1</version>
+		</dependency>
+		
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
