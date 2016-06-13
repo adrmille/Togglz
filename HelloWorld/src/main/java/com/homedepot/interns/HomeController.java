@@ -68,6 +68,15 @@ public class HomeController {
 		
 		model.addAttribute("name", user.getName());
 		
+		if(MyFeatures.FEATURE_ONE.isActive()){
+			model.addAttribute("secret", "You're able to see the secret message");
+			logger.info("The user can see the secret message");
+		}
+		else{
+			model.addAttribute("secret", "You are not able to see the secret message :(");
+			logger.info("The user can't see the message");
+		}
+		
 		return "timeresult";
 	}
 	

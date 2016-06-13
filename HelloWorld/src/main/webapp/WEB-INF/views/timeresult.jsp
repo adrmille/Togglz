@@ -3,6 +3,7 @@
 <head>
     <title>Welcome!</title>
     <h2>Good ${hour} ${name}</h2>
+    <h3>Secret Message: ${secret}</h3>
 </head>
 <body>  
 </body>
