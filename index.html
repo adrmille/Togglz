@@ -79,13 +79,13 @@
     &lt;/dependency&gt;
 </code></pre>
 
-<h3>
-<a id="togglz-configuration" class="anchor" href="#togglz-configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz Configuration</h3>
+<h2>
+<a id="togglz-configuration" class="anchor" href="#togglz-configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz Configuration</h2>
 
 <p>After adding the dependencies to your project, you will have to add two additional files, MyFeatures.java and MyTogglzConfiguration.java. </p>
 
-<h2>
-<a id="myfeatures-enum" class="anchor" href="#myfeatures-enum" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MyFeatures Enum</h2>
+<h3>
+<a id="myfeatures-enum" class="anchor" href="#myfeatures-enum" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MyFeatures Enum</h3>
 
 <p>Togglz are implemented as enums in Java. You will need to declare a MyFeatures enum and add this file to your project and format it accordingly.</p>
 
@@ -155,8 +155,8 @@ public UserProvider getUserProvider() {
 getStateRepository() - return the specified storage, in this case 
 getUserProvider() - return the user at this instance of the application, in this case to make things simpler all instances will return that the user is an admin, this should not be used in production applications!!!</p>
 
-<h2>
-<a id="adjust-webxml" class="anchor" href="#adjust-webxml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adjust web.xml</h2>
+<h3>
+<a id="adjust-webxml" class="anchor" href="#adjust-webxml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adjust web.xml</h3>
 
 <p>Lastly, in order for your application to run togglz correctly, there are a few things you need to add to the web.xml file in your project. </p>
 
