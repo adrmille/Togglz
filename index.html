@@ -89,14 +89,14 @@
 
 <p>Togglz are implemented as enums in Java. You will need to declare a MyFeatures enum and add this file to your project and format it accordingly.</p>
 
-<p>import org.togglz.core.Feature;
+<pre><code>import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.Label;
-import org.togglz.core.context.FeatureContext;</p>
+import org.togglz.core.context.FeatureContext;
 
-<p>public enum MyFeatures implements Feature {</p>
+public enum MyFeatures implements Feature {
 
-<pre><code> @EnabledByDefault
+ @EnabledByDefault
     @Label("First Feature")
     FEATURE_ONE,
 
@@ -106,9 +106,9 @@ import org.togglz.core.context.FeatureContext;</p>
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
     }
-</code></pre>
 
-<p>}</p>
+}
+</code></pre>
 
 <p>@EnabledByDefault - these togglz will be enabled when the application runs
 <a href="https://github.com/Label" class="user-mention">@Label</a> - the name of the feature</p>
@@ -118,24 +118,24 @@ import org.togglz.core.context.FeatureContext;</p>
 
 <p>You will also need to create a Togglz configuration class. </p>
 
-<p>import java.io.File;</p>
+<pre><code>import java.io.File;
 
-<p>import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Component;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.file.FileBasedStateRepository;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
-import org.togglz.core.user.UserProvider;</p>
+import org.togglz.core.user.UserProvider;
 
-<p><a href="https://github.com/Component" class="user-mention">@Component</a>
+@Component
 public class MyTogglzConfiguration implements TogglzConfig {
     public Class&lt;? extends Feature&gt; getFeatureClass() {
-        return MyFeatures.class;
-    }</p>
+    return MyFeatures.class;
+}
 
-<pre><code>public StateRepository getStateRepository() {
+public StateRepository getStateRepository() {
     return new FileBasedStateRepository(new File("/tmp/features.properties"));
 }
 
@@ -147,9 +147,8 @@ public UserProvider getUserProvider() {
          }
      };
 }
+}
 </code></pre>
-
-<p>}</p>
 
 <p>getFeatureClass() - retrieve the Features from your Features enum
 getStateRepository() - return the specified storage, in this case 
