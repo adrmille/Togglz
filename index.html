@@ -34,6 +34,132 @@
 <p>A more in depth tutorial for how to integrate Togglz into simple Spring MVC web projects. </p>
 
 <h3>
+<a id="dependencies-in-pomxml-file" class="anchor" href="#dependencies-in-pomxml-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies in pom.xml file</h3>
+
+<pre><code>            &lt;!-- Togglz core module (mandatory) --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.togglz&lt;/groupId&gt;
+        &lt;artifactId&gt;togglz-core&lt;/artifactId&gt;
+        &lt;version&gt;2.3.0.RC1&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- Togglz for Servlet environments (mandatory for webapps) --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.togglz&lt;/groupId&gt;
+        &lt;artifactId&gt;togglz-servlet&lt;/artifactId&gt;
+        &lt;version&gt;2.3.0.RC1&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- Spring integration (optional) --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.togglz&lt;/groupId&gt;
+        &lt;artifactId&gt;togglz-spring-web&lt;/artifactId&gt;
+        &lt;version&gt;2.3.0.RC1&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- Togglz Admin Console --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.togglz&lt;/groupId&gt;
+        &lt;artifactId&gt;togglz-console&lt;/artifactId&gt;
+        &lt;version&gt;2.3.0.RC1&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre>
+
+<h3>
+<a id="myfeatures-enum" class="anchor" href="#myfeatures-enum" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MyFeatures Enum</h3>
+
+<p>import org.togglz.core.Feature;
+import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.annotation.Label;
+import org.togglz.core.context.FeatureContext;</p>
+
+<p>public enum MyFeatures implements Feature {</p>
+
+<pre><code> @EnabledByDefault
+    @Label("First Feature")
+    FEATURE_ONE,
+
+    @Label("Second Feature")
+    FEATURE_TWO;
+
+    public boolean isActive() {
+        return FeatureContext.getFeatureManager().isActive(this);
+    }
+</code></pre>
+
+<p>}</p>
+
+<h3>
+<a id="togglz-configuration-class" class="anchor" href="#togglz-configuration-class" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz Configuration Class</h3>
+
+<p>import java.io.File;</p>
+
+<p>import org.springframework.stereotype.Component;
+import org.togglz.core.Feature;
+import org.togglz.core.manager.TogglzConfig;
+import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.file.FileBasedStateRepository;
+import org.togglz.core.user.FeatureUser;
+import org.togglz.core.user.SimpleFeatureUser;
+import org.togglz.core.user.UserProvider;</p>
+
+<p><a href="https://github.com/Component" class="user-mention">@Component</a>
+public class MyTogglzConfiguration implements TogglzConfig {
+    public Class&lt;? extends Feature&gt; getFeatureClass() {
+        return MyFeatures.class;
+    }</p>
+
+<pre><code>public StateRepository getStateRepository() {
+    return new FileBasedStateRepository(new File("/tmp/features.properties"));
+}
+
+public UserProvider getUserProvider() {
+     return new UserProvider() {
+         @Override
+         public FeatureUser getCurrentUser() {
+             return new SimpleFeatureUser("admin", true);
+         }
+     };
+    //String user = HttpServletRequest.getUserPrincipal().getName();
+    //return new ServletUserProvider("admin");
+}
+</code></pre>
+
+<p>}</p>
+
+<h3>
+<a id="webxml" class="anchor" href="#webxml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Web.xml</h3>
+
+<pre><code>   &lt;context-param&gt;
+    &lt;param-name&gt;org.togglz.core.manager.TogglzConfig&lt;/param-name&gt;
+    &lt;param-value&gt;com.my.app.MyTogglzConfiguration&lt;/param-value&gt;
+&lt;/context-param&gt;
+
+&lt;context-param&gt;
+    &lt;param-name&gt;org.togglz.FEATURE_MANAGER_PROVIDED&lt;/param-name&gt;
+    &lt;param-value&gt;false&lt;/param-value&gt;
+&lt;/context-param&gt;
+
+    &lt;!-- Togglz configuration for Servlet 2.5 and earlier --&gt;
+&lt;filter&gt;
+    &lt;filter-name&gt;TogglzFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.togglz.servlet.TogglzFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;TogglzFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+
+    &lt;servlet&gt;
+    &lt;servlet-name&gt;TogglzConsoleServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.togglz.console.TogglzConsoleServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;TogglzConsoleServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/togglz/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre>
+
+<h3>
 <a id="how-does-togglz-work" class="anchor" href="#how-does-togglz-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How does Togglz work?</h3>
 
 <p>TBD</p>
