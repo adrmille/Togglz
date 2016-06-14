@@ -1,31 +1,55 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <title>Togglz Spring MVC Integration by danichus</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Togglz Spring MVC Integration</h1>
-      <h2 class="project-tagline">Spring MVC Togglz Installation Guide</h2>
-      <a href="https://github.com/danichus/Togglz" class="btn">View on GitHub</a>
-      <a href="https://github.com/danichus/Togglz/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/danichus/Togglz/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <section class="main-content">
-      <h1>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Togglz Spring MVC Integration (under construction) by danichus</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Togglz Spring MVC Integration (under construction)</h1>
+        <h2>Spring MVC Togglz Installation Guide</h2>
+        <a href="https://github.com/danichus/Togglz" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
 <a id="togglz-with-spring-mvc" class="anchor" href="#togglz-with-spring-mvc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz with Spring MVC</h1>
 
 <p>A more in depth tutorial for how to integrate Togglz into simple Spring MVC web projects. This tutorial will more specifically be using the Spring Tools Suite (STS) IDE, however these instructions should be applicable to any Spring MVC project. In this tutorial we will create a simple HelloWorld Spring MVC project, and implement simple feature switches using <a href="https://togglz.org/">Togglz</a> in Java.</p>
 
 <h3>
-<a id="dependencies-in-pomxml-file" class="anchor" href="#dependencies-in-pomxml-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies in pom.xml file</h3>
+<a id="creating-hello-world-project" class="anchor" href="#creating-hello-world-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating Hello World Project</h3>
+
+<ul>
+<li>Open Spring Tools Suite</li>
+<li>File -&gt; New -&gt; Spring Legacy Project -&gt; Spring MVC Project</li>
+<li>Name project accordingly</li>
+<li>Run project on server, localhost:8080/myapp should display Hello World by default</li>
+</ul>
+
+<h2>
+<a id="adding-togglz-to-your-spring-mvc-project" class="anchor" href="#adding-togglz-to-your-spring-mvc-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adding Togglz to your Spring MVC Project</h2>
+
+<h3>
+<a id="togglz-dependencies" class="anchor" href="#togglz-dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz Dependencies</h3>
+
+<p>In the project explorer, find the pom.xml file that should be under your project folder. Add the following dependencies to your pom.xml file. These are Maven dependencies that will be added to your project. The libraries related to your dependencies will be added to your project after they are built. In our Spring MVC, the togglz core, servlet, spring-web, and admin console dependencies are required. Please refer to <a href="https://togglz.org/">Togglz</a> for additional information. </p>
 
 <pre><code>            &lt;!-- Togglz core module (mandatory) --&gt;
     &lt;dependency&gt;
@@ -56,7 +80,14 @@
 </code></pre>
 
 <h3>
-<a id="myfeatures-enum" class="anchor" href="#myfeatures-enum" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MyFeatures Enum</h3>
+<a id="togglz-configuration" class="anchor" href="#togglz-configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz Configuration</h3>
+
+<p>After adding the dependencies to your project, you will have to add two additional files, MyFeatures.java and MyTogglzConfiguration.java. </p>
+
+<h2>
+<a id="myfeatures-enum" class="anchor" href="#myfeatures-enum" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MyFeatures Enum</h2>
+
+<p>Togglz are implemented as enums in Java. You will need to declare a MyFeatures enum and add this file to your project and format it accordingly.</p>
 
 <p>import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
@@ -79,8 +110,13 @@ import org.togglz.core.context.FeatureContext;</p>
 
 <p>}</p>
 
+<p>@EnabledByDefault - these togglz will be enabled when the application runs
+<a href="https://github.com/Label" class="user-mention">@Label</a> - the name of the feature</p>
+
 <h3>
 <a id="togglz-configuration-class" class="anchor" href="#togglz-configuration-class" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz Configuration Class</h3>
+
+<p>You will also need to create a Togglz configuration class. </p>
 
 <p>import java.io.File;</p>
 
@@ -110,27 +146,39 @@ public UserProvider getUserProvider() {
              return new SimpleFeatureUser("admin", true);
          }
      };
-    //String user = HttpServletRequest.getUserPrincipal().getName();
-    //return new ServletUserProvider("admin");
 }
 </code></pre>
 
 <p>}</p>
 
-<h3>
-<a id="webxml" class="anchor" href="#webxml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Web.xml</h3>
+<p>getFeatureClass() - retrieve the Features from your Features enum
+getStateRepository() - return the specified storage, in this case 
+getUserProvider() - return the user at this instance of the application, in this case to make things simpler all instances will return that the user is an admin, this should not be used in production applications!!!</p>
+
+<h2>
+<a id="adjust-webxml" class="anchor" href="#adjust-webxml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adjust web.xml</h2>
+
+<p>Lastly, in order for your application to run togglz correctly, there are a few things you need to add to the web.xml file in your project. </p>
+
+<p>In order for Togglz to recognize your configuration class you need to add this context param, be especially careful of the param-value, and make sure it maps to your specified package and class name: com.my.app.MyTogglzConfiguration</p>
 
 <pre><code>   &lt;context-param&gt;
     &lt;param-name&gt;org.togglz.core.manager.TogglzConfig&lt;/param-name&gt;
     &lt;param-value&gt;com.my.app.MyTogglzConfiguration&lt;/param-value&gt;
 &lt;/context-param&gt;
+</code></pre>
 
-&lt;context-param&gt;
+<p>Togglz will have to be specified whether or not the Feature Manager is provided, since we are working with a Spring MVC application, we need to specify that this is false</p>
+
+<pre><code>&lt;context-param&gt;
     &lt;param-name&gt;org.togglz.FEATURE_MANAGER_PROVIDED&lt;/param-name&gt;
     &lt;param-value&gt;false&lt;/param-value&gt;
 &lt;/context-param&gt;
+</code></pre>
 
-    &lt;!-- Togglz configuration for Servlet 2.5 and earlier --&gt;
+<p>If you are working in a Servlet environment 2.5 or earlier you will have to add this to your web.xml</p>
+
+<pre><code>    &lt;!-- Togglz configuration for Servlet 2.5 and earlier --&gt;
 &lt;filter&gt;
     &lt;filter-name&gt;TogglzFilter&lt;/filter-name&gt;
     &lt;filter-class&gt;org.togglz.servlet.TogglzFilter&lt;/filter-class&gt;
@@ -139,8 +187,11 @@ public UserProvider getUserProvider() {
     &lt;filter-name&gt;TogglzFilter&lt;/filter-name&gt;
     &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
 &lt;/filter-mapping&gt;
+</code></pre>
 
-    &lt;servlet&gt;
+<p>Lastly, the console servlet is added in order to properly configure the admin console.</p>
+
+<pre><code>    &lt;servlet&gt;
     &lt;servlet-name&gt;TogglzConsoleServlet&lt;/servlet-name&gt;
     &lt;servlet-class&gt;org.togglz.console.TogglzConsoleServlet&lt;/servlet-class&gt;
 &lt;/servlet&gt;
@@ -151,17 +202,32 @@ public UserProvider getUserProvider() {
 </code></pre>
 
 <h3>
+<a id="test-the-togglz-admin-console" class="anchor" href="#test-the-togglz-admin-console" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Test the Togglz Admin Console</h3>
+
+<p>Build and run your project, and go to localhost:8080/myapp/togglz, and the admin console should appear if you have integrated togglz into your application correctly. </p>
+
+<h3>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>TBD</p>
+        </section>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/danichus/Togglz">Togglz Spring MVC Integration</a> is maintained by <a href="https://github.com/danichus">danichus</a>.</span>
+        <aside id="sidebar">
+          <a href="https://github.com/danichus/Togglz/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/danichus/Togglz/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+          <p class="repo-owner"><a href="https://github.com/danichus/Togglz"></a> is maintained by <a href="https://github.com/danichus">danichus</a>.</p>
 
-    </section>
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
 
   
   </body>
