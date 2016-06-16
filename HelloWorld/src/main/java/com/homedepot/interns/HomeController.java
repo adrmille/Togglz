@@ -55,7 +55,10 @@ public class HomeController {
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		String hr = String.valueOf(hour);
-		logger.info("The hour is " + hr);
+		if(MyFeatures.FEATURE_TWO.isActive()){
+			logger.info("The hour is " + hr);
+			model.addAttribute("time", hr);
+		}
 		if(hour < 12){
 			model.addAttribute("hour", "Morning");
 		}
