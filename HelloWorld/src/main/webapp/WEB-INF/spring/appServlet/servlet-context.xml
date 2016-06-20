@@ -24,15 +24,20 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 
-	<context:component-scan base-package="com.homedepot.interns" />
 
 	<beans:bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<beans:property name="url" value="jdbc:mysql://localhost:3306/togglz" />
+		<beans:property name="url"
+			value="jdbc:mysql://localhost:3306/togglz" />
 		<beans:property name="username" value="root" />
-		<beans:property name="password" value="@9k47wiir" />
+		<beans:property name="password" value="coolkid" />
 	</beans:bean>
 
+	<!-- Definition for studentJDBCTemplate bean -->
+	<beans:bean id="MyTogglzConfiguration" class="com.homedepot.interns.MyTogglzConfiguration">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
+	<context:component-scan base-package="com.homedepot.interns" />
 
 </beans:beans>
