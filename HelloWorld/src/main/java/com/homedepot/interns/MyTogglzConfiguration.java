@@ -1,18 +1,15 @@
 package com.homedepot.interns;
 
-import java.sql.SQLException;
-
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.jdbc.JDBCStateRepository;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
@@ -23,7 +20,6 @@ public class MyTogglzConfiguration implements TogglzConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	//how to configure? have put pom xml, and beans 
-	
 
 	private DataSource dataSource;
 
@@ -48,6 +44,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		
     	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
     	JDBCStateRepository repo = null;
 
@@ -57,7 +54,9 @@ public class MyTogglzConfiguration implements TogglzConfig {
     	catch(Exception e) {
     		e.printStackTrace();
     	}
-        return repo;	
+    	
+    	return new CachingStateRepository(repo, 100000);
+        //return repo;	
     }
 
     public UserProvider getUserProvider() {
