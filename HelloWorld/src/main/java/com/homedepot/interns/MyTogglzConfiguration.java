@@ -66,7 +66,5 @@ public class MyTogglzConfiguration implements TogglzConfig {
                  return new SimpleFeatureUser("admin", true);
              }
          };
-    	//String user = HttpServletRequest.getUserPrincipal().getName();
-        //return new ServletUserProvider("admin");
     }
 }
