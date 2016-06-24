@@ -35,9 +35,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
     public StateRepository getStateRepository(){
     	
 //    	return new FileBasedStateRepository(new File("/tmp/features.properties"));
-    	if(dataSource ==null){
-    		logger.info("dataSource is null");
-    	}
+    	
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e2) {
@@ -45,7 +43,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			e2.printStackTrace();
 		}
 		
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
+		DataSource source = new DriverManagerDataSource("jdbc:mysql://104.197.225.58:3306/togglz", "remote", "tester123");
     	JDBCStateRepository repo = null;
 
     	try {
