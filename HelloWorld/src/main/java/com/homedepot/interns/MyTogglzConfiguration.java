@@ -10,7 +10,8 @@ import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepository;
-import org.togglz.core.repository.jdbc.JDBCStateRepository;
+//import org.togglz.core.repository.jdbc.JDBCStateRepository;
+import com.homedepot.interns.MyJDBCStateRepo; //OUR jdbc
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
@@ -45,11 +46,11 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			e2.printStackTrace();
 		}
 		
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
-    	JDBCStateRepository repo = null;
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://104.197.225.58:3306/togglz", "remote", "tester123");
+    	MyJDBCStateRepo repo = null;
 
     	try {
-    		repo = new JDBCStateRepository(source);
+    		repo = new MyJDBCStateRepo(source);
     	}
     	catch(Exception e) {
     		e.printStackTrace();
