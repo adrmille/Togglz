@@ -285,7 +285,7 @@ public class MyJDBCStateRepo implements StateRepository {
                 /*
                  * First try to update an existing row
                  */
-                String updateSql = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, STRATEGY_ID = ?, STRATEGY_PARAMS = ? WHERE FEATURE_NAME = ?";
+                String updateSql = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, STRATEGY_ID = ?, CD_GRP_ID = ?, CD_NM = ?, STRATEGY_PARAMS = ? WHERE FEATURE_NAME = ?";
                 PreparedStatement updateStatement = connection.prepareStatement(insertTableName(updateSql));
                 try {
 
@@ -293,8 +293,11 @@ public class MyJDBCStateRepo implements StateRepository {
 
                     updateStatement.setInt(1, featureState.isEnabled() ? 1 : 0);
                     updateStatement.setString(2, Strings.trimToNull(featureState.getStrategyId()));
-                    updateStatement.setString(3, Strings.trimToNull(paramData));
-                    updateStatement.setString(4, featureState.getFeature().name());
+                    
+                    updateStatement.setInt(3,1);
+                    updateStatement.setString(4, "test");
+                    updateStatement.setString(5, Strings.trimToNull(paramData));
+                    updateStatement.setString(6, featureState.getFeature().name()); //4
 
                     updatedRows = updateStatement.executeUpdate();
 
@@ -307,7 +310,9 @@ public class MyJDBCStateRepo implements StateRepository {
                  */
                 if (updatedRows == 0) {
 
-                    String insertSql = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS) VALUES (?,?,?,?)";
+                    String insertSql = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS, CD_NM, INT_VAL, LAST_UPD_TS, LAST_UPD_SYSUSR_ID,"
+                    		+ "CD_ENV, CD_OWNER) (?,?,?,?,?,?,?,?,?,?)";
+        		
                     PreparedStatement insertStatement = connection.prepareStatement(insertTableName(insertSql));
                     try {
 
@@ -317,6 +322,8 @@ public class MyJDBCStateRepo implements StateRepository {
                         insertStatement.setInt(2, featureState.isEnabled() ? 1 : 0);
                         insertStatement.setString(3, Strings.trimToNull(featureState.getStrategyId()));
                         insertStatement.setString(4, Strings.trimToNull(paramsAsString));
+                        insertStatement.setString(5, "blah");
+                        
 
                         insertStatement.executeUpdate();
 

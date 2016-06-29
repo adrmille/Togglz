@@ -37,12 +37,9 @@ class MySchemaUpdater {
 
     protected void migrateToVersion1() throws SQLException {
         execute("CREATE TABLE %TABLE% (FEATURE_NAME VARCHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS VARCHAR(2000),"
-        		+ "CD_GRP_ID INTEGER NOT NULL, CD_NM VARCHAR(26) NOT NULL, CHAR_VAL VARCHAR(2000) NOT NULL,"
-        		+ "CRT_SYSUSR_ID CHAR(24) NULL, CRT_TS DATETIME NOT NULL,"
-        		+ "DEC_VAL DECIMAL NULL, DSPL_NM VARCHAR(255) NULL,"
-        		+ "DSPL_SEQ INTEGER NULL, DT_VAL DATE NULL, INT_VAL BIGINT NULL,"
-        		+ "LAST_UPD_SYSUSR_ID CHAR(24) NOT NULL, LAST_UPD_TS DATETIME NOT NULL,"
-        		+ "OPTCOUNTER SMALLINT NULL, TS_VAL DATETIME NULL)");
+        		+ "CD_ENV_VAL VARCHAR(4) NOT NULL, CD_NM VARCHAR(26) NOT NULL,"
+        		+ "INT_VAL BIGINT NULL, CD_OWNER VARCHAR(24) NOT NULL, "
+        		+ "LAST_UPD_SYSUSR_ID CHAR(24) NOT NULL, LAST_UPD_TS DATETIME NOT NULL)");
     }
 
     protected boolean isSchemaVersion1() throws SQLException {
@@ -67,9 +64,9 @@ class MySchemaUpdater {
             try {
 
                 resultSet = updateDataStmt.executeQuery(substitute(
-                    "SELECT FEATURE_NAME, FEATURE_USERS, STRATEGY_ID, STRATEGY_PARAMS, CD_GRP_ID, CD_NM,"
-                    + "CHAR_VAL, CRT_SYSUSR_ID, CRT_TS, DEC_VAL, DSPL_NM, DSPL_SEQ, DT_VAL, INT_VAL, "
-                    + "LAST_UPD_SYSUSR_ID, LAST_UPD_TS, OPTCOUNTER, TS_VAL FROM %TABLE%"));
+                    "SELECT FEATURE_NAME, FEATURE_USERS, STRATEGY_ID, STRATEGY_PARAMS, CD_ENV_VAL, CD_NM,"
+        		+ "INT_VAL, CD_OWNER, "
+        		+ "LAST_UPD_SYSUSR_ID, LAST_UPD_TS FROM %TABLE%"));
 
                 while (resultSet.next()) {
 
