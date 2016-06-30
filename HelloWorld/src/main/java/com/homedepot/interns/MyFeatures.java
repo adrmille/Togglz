@@ -11,6 +11,7 @@ public enum MyFeatures implements Feature {
 	    @Label("First Feature")
 	    FEATURE_ONE,
 
+	 @EnabledByDefault
 	    @Label("Second Feature")
 	    FEATURE_TWO;
 
