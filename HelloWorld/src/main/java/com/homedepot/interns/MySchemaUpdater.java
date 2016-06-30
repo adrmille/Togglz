@@ -21,8 +21,7 @@ class MySchemaUpdater {
 
     private final Connection connection;
 
-    private final String tableName;
-
+	private final String tableName;
     private final MapSerializer serializer;
 
     protected MySchemaUpdater(Connection connection, String tableName, MapSerializer serializer) {
@@ -38,7 +37,7 @@ class MySchemaUpdater {
     protected void migrateToVersion1() throws SQLException {
         execute("CREATE TABLE %TABLE% (FEATURE_NAME VARCHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS VARCHAR(2000),"
         		+ "CD_ENV_VAL VARCHAR(4) NOT NULL, CD_NM VARCHAR(26) NOT NULL,"
-        		+ "INT_VAL BIGINT NULL, CD_OWNER VARCHAR(24) NOT NULL, "
+        		+ "CD_OWNER VARCHAR(24) NOT NULL, "
         		+ "LAST_UPD_SYSUSR_ID CHAR(24) NOT NULL, LAST_UPD_TS DATETIME NOT NULL)");
     }
 
