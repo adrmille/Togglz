@@ -8,12 +8,15 @@ import org.togglz.core.context.FeatureContext;
 public enum MyFeatures implements Feature {
 
 	 @EnabledByDefault
-	    @Label("First Feature")
+	    
 	    FEATURE_ONE,
 
 	 @EnabledByDefault
-	    @Label("Second Feature")
-	    FEATURE_TWO;
+	    
+	    FEATURE_TWO,
+	 @EnabledByDefault 
+	    FEATURE_THREE;
+	 
 
 	    public boolean isActive() {
 	        return FeatureContext.getFeatureManager().isActive(this);
