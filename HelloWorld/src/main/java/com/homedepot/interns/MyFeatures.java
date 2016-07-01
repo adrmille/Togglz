@@ -7,15 +7,16 @@ import org.togglz.core.context.FeatureContext;
 
 public enum MyFeatures implements Feature {
 
+	//will add the enums later 
 	 @EnabledByDefault
 	    
 	    FEATURE_ONE,
-
-	 @EnabledByDefault
-	    
+	 @EnabledByDefault 
 	    FEATURE_TWO,
 	 @EnabledByDefault 
 	    FEATURE_THREE;
+	
+	
 	 
 
 	    public boolean isActive() {
