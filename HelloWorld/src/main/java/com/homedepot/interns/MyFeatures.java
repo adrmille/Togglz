@@ -14,7 +14,9 @@ public enum MyFeatures implements Feature {
 	 @EnabledByDefault 
 	    FEATURE_TWO,
 	 @EnabledByDefault 
-	    FEATURE_THREE;
+	    FEATURE_THREE,
+	    
+	    HFMobileTypeAhead ;
 	
 	
 	 

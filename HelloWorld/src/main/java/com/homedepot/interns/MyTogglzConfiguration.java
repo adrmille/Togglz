@@ -36,9 +36,9 @@ public class MyTogglzConfiguration implements TogglzConfig {
     public StateRepository getStateRepository(){
     	
 //    	return new FileBasedStateRepository(new File("/tmp/features.properties"));
-    	if(dataSource ==null){
+    	/*if(dataSource ==null){
     		logger.info("dataSource is null");
-    	}
+    	}*/
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e2) {
