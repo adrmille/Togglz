@@ -259,13 +259,15 @@ public class MyTogglzConfiguration implements TogglzConfig {
 <ol>
 <li>Create Compute Engine VM Instance</li>
 <li>generate ssh key so you can connect to it through your remote </li>
-<li>Download mySQL on VM</li>
+<li>Download mySQL on you GCP Instance</li>
 <li>Edit the mysql config file, make sure server listens to all, and comment out the external listening</li>
 <li>Open Sql, create new user and configure,<a href="http://stackoverflow.com/questions/1559955/host-xxx-xx-xxx-xxx-is-not-allowed-to-connect-to-this-mysql-server">http://stackoverflow.com/questions/1559955/host-xxx-xx-xxx-xxx-is-not-allowed-to-connect-to-this-mysql-server</a>
 </li>
 <li>Flush privileges</li>
 <li>Make sure port 3306 is open on your compute engine, add new firewall rule, and allow access from anyone, 0.0.0.0</li>
 </ol>
+
+<p>For additional help, go to <a href="https://cloud.google.com/solutions/setup-mysql">Google Cloud Platform</a></p>
 
 <h3>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
@@ -275,10 +277,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 <h3>
 <a id="to-do" class="anchor" href="#to-do" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TO DO:</h3>
 
-<p>-added togglz jdbc capability</p>
-
 <ul>
-<li>added caching state repository ability</li>
 <li>set up google cloud platform to host mysql server</li>
 <li>access mysql server from jdbc driver in application</li>
 <li>multiple machines can access the togglz database from the hello world application </li>
