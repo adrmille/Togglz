@@ -9,14 +9,14 @@ public enum MyFeatures implements Feature {
 
 	//will add the enums later 
 	 @EnabledByDefault
-	    
 	    FEATURE_ONE,
 	 @EnabledByDefault 
 	    FEATURE_TWO,
 	 @EnabledByDefault 
 	    FEATURE_THREE,
-	    
-	    HFMobileTypeAhead ;
+	    PipSearchNav2BannerFeatureSwitch,
+	    MyAccountSOCCFeature,
+	    HFMobileTypeAhead;
 	
 	
 	 

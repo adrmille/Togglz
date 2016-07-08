@@ -51,6 +51,8 @@ public class HomeController {
 	@RequestMapping(value = "/addTime", method = RequestMethod.POST)
 	public String addTiming(@ModelAttribute("interns")User user, ModelMap model){
 		//model.addAttribute("name", user.getName());
+		MyOptions op = new MyOptions();
+		op.listFeatures();
 
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -80,6 +82,8 @@ public class HomeController {
 			logger.info("The user can't see the message");
 		}
 		
+		MyFeatures.class.getEnumConstants();
+	
 		return "timeresult";
 	}
 	
