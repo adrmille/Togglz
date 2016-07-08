@@ -175,7 +175,7 @@ getUserProvider() - return the user at this instance of the application, in this
 &lt;/context-param&gt;
 </code></pre>
 
-<p>Togglz will have to be specified whether or not the Feature Manager is provided, since we are working with a Spring MVC application, we need to specify that this is false</p>
+<p>Togglz will have to be specified whether or not the Feature Manager is provided, since we are working with a Spring MVC application, we need to specify that this is false because we don't provide our own feature manager we want togglz to go ahead and instantiate its own.</p>
 
 <pre><code>&lt;context-param&gt;
     &lt;param-name&gt;org.togglz.FEATURE_MANAGER_PROVIDED&lt;/param-name&gt;
@@ -216,11 +216,56 @@ getUserProvider() - return the user at this instance of the application, in this
 <h2>
 <a id="togglz-jdbc-state-repository" class="anchor" href="#togglz-jdbc-state-repository" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz JDBC State Repository</h2>
 
+<p>Togglz has the capability to save the values of your features states into a database using the JDBC State repository. In order to utilize this feature all you need to do is provide a DataSource to the JDBCStateRepository in the your MyTogglzConfiguration class. </p>
+
+<pre><code>@Component
+public class MyTogglzConfiguration implements TogglzConfig {
+    /* ..... */ 
+
+    @Override
+    public StateRepository getStateRepository() {
+        DataSource source = new DriverManager("jdbc:mysql/localhost:3306/togglz", "username", "password");
+
+        return new JDBCStateRepository(source);
+    }
+
+}
+</code></pre>
+
 <h2>
 <a id="togglz-caching-state-repository" class="anchor" href="#togglz-caching-state-repository" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Togglz Caching State Repository</h2>
 
+<p>Togglz also has the ability to use a cache to store the feature states. This is especially useful if accessing a database to get the feature values every time is expensive. All you have to do is provide an alternative state repository to the CachingStateRepository object, and an optional time frame for how long the cache should last before it will refresh and grab data from the alternative state repository. In this example we simply created a CachingStateRepository based on the JDBCRepository that we created in the previous example. </p>
+
+<pre><code>@Component
+public class MyTogglzConfiguration implements TogglzConfig {
+    /* ..... */ 
+
+    @Override
+    public StateRepository getStateRepository() {
+        DataSource source = new DriverManager("jdbc:mysql/localhost:3306/togglz", "username", "password");
+        JDBCStateRepository repo = new JDBCStateRepository(source);
+        return new CachingStateRepository(repo, 10000)
+    }
+
+}
+</code></pre>
+
 <h2>
 <a id="access-togglz-state-repository-remotely-using-google-cloud-platform-google-compute-engine" class="anchor" href="#access-togglz-state-repository-remotely-using-google-cloud-platform-google-compute-engine" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Access Togglz State Repository Remotely using Google Cloud Platform (Google Compute Engine)</h2>
+
+<p>In our project, it was required that the Togglz saved feature states were able to be shared across multiple instances of our application. In other words, these feature states should be shared across multiple machines so the database that saved our features needed to be shared. In order accomplish this task we decided to set up our own instance of GCP running a linux environment, and hosted our mysql server on this instance. </p>
+
+<ol>
+<li>Create Compute Engine VM Instance</li>
+<li>generate ssh key so you can connect to it through your remote </li>
+<li>Download mySQL on VM</li>
+<li>Edit the mysql config file, make sure server listens to all, and comment out the external listening</li>
+<li>Open Sql, create new user and configure,<a href="http://stackoverflow.com/questions/1559955/host-xxx-xx-xxx-xxx-is-not-allowed-to-connect-to-this-mysql-server">http://stackoverflow.com/questions/1559955/host-xxx-xx-xxx-xxx-is-not-allowed-to-connect-to-this-mysql-server</a>
+</li>
+<li>Flush privileges</li>
+<li>Make sure port 3306 is open on your compute engine, add new firewall rule, and allow access from anyone, 0.0.0.0</li>
+</ol>
 
 <h3>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
