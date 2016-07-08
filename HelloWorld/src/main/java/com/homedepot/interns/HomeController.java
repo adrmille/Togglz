@@ -51,7 +51,7 @@ public class HomeController {
 	@RequestMapping(value = "/addTime", method = RequestMethod.POST)
 	public String addTiming(@ModelAttribute("interns")User user, ModelMap model){
 		//model.addAttribute("name", user.getName());
-		MyOptions op = new MyOptions();
+		MyOptionsHelper op = new MyOptionsHelper();
 		op.listFeatures();
 
 		Calendar cal = Calendar.getInstance();
