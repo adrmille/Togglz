@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
-import org.togglz.core.repository.cache.CachingStateRepository;
+//import org.togglz.core.repository.cache.CachingStateRepository;
+import com.homedepot.interns.MyCachingStateRepo;
 //import org.togglz.core.repository.jdbc.JDBCStateRepository;
 import com.homedepot.interns.MyJDBCStateRepo; //OUR jdbc
 import org.togglz.core.user.FeatureUser;
@@ -46,7 +47,9 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			e2.printStackTrace();
 		}
 		
+
     	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
+
     	MyJDBCStateRepo repo = null;
 
     	try {
@@ -56,7 +59,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
     		e.printStackTrace();
     	}
     	
-    	return new CachingStateRepository(repo, 100000);
+    	return new MyCachingStateRepo(repo, 100000);
         //return repo;	
     }
 
