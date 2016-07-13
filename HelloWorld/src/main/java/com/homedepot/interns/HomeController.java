@@ -100,7 +100,7 @@ public class HomeController {
 		logger.info("User has entered form page");
 		return new ModelAndView("form", "command", new Greeting());
 	}
-	
+	 
 	@RequestMapping(value = "/addForm", method = RequestMethod.POST)
 	public String addForm(@ModelAttribute("interns")Greeting greeting,
 			ModelMap model){
@@ -111,6 +111,9 @@ public class HomeController {
 		logger.info("Result page has been submitted");
 		return "result";
 	}
+	/*@RequestMapping(value = "/retCache", method = RequestMethod.GET)
+	public Map retCache(){
 	
+	}*/
 	
 }
