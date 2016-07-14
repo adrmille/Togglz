@@ -53,6 +53,10 @@ public class HomeController {
 		//model.addAttribute("name", user.getName());
 		MyOptionsHelper op = new MyOptionsHelper();
 		op.listFeatures();
+		
+		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
+		cache.testFunction();
+		cache.showCache();
 
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);

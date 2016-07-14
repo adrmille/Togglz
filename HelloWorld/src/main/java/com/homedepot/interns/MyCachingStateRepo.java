@@ -3,6 +3,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -22,7 +24,59 @@ public class MyCachingStateRepo implements StateRepository {
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<String, CacheEntry>();
 
     private long ttl;
+    private static MyCachingStateRepo instance = null;
+    public static MyCachingStateRepo getInstance(StateRepository delegate, long ttl){
+    	if(instance == null){
+    		instance = new MyCachingStateRepo(delegate, ttl);
+    	}
+    	return instance; 
+    	
+    }
+    
+    public static MyCachingStateRepo getInstance(){
+    	return instance;
+    }
+    /*
+     * public class ClassicSingleton {
 
+   private static ClassicSingleton instance = null;
+   private ClassicSingleton() {
+      // Exists only to defeat instantiation.
+   }
+   public static ClassicSingleton getInstance() {
+      if(instance == null) {
+         instance = new ClassicSingleton();
+      }
+      return instance;
+   }
+}
+     * 
+     * 
+     */
+
+    /*
+	private OptionsRegistry(){}
+	
+	/**
+	 * The Lazy Initialization-on-demand holder, until we need an instance, the OptionsRegistryHolder class will not be initialized 
+	 * until required and it can still use other static members of OptionsRegistry class.
+	 * 
+	 * @author AXG8965
+	 *
+	 
+	private static class OptionsRegistryHolder {
+		private static final OptionsRegistry INSTANCE = new OptionsRegistry();
+	}
+	
+	/** 
+	 * It returns singleton instance of the OptionsRegistry class
+	 * @return
+	 
+	public static OptionsRegistry getInstance() {
+		return OptionsRegistryHolder.INSTANCE;
+	}
+	*/
+    
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will only expire if
      * {@link #setFeatureState(FeatureState)} is invoked. You should therefore never use this constructor if the feature state
@@ -30,7 +84,12 @@ public class MyCachingStateRepo implements StateRepository {
      * 
      * @param delegate The repository to delegate invocations to
      */
-    public MyCachingStateRepo(StateRepository delegate) {
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+    
+    public void testFunction(){
+    	logger.info("testing testing 123 abc lafdkmfdsk");
+    }
+    private MyCachingStateRepo(StateRepository delegate) {
         this(delegate, 0);
     }
 
@@ -42,7 +101,7 @@ public class MyCachingStateRepo implements StateRepository {
      * @param ttl The time in milliseconds after which a cache entry will expire
      * @throws IllegalArgumentException if the specified ttl is negative
      */
-    public MyCachingStateRepo(StateRepository delegate, long ttl) {
+    private MyCachingStateRepo(StateRepository delegate, long ttl) {
         if (ttl < 0) {
             throw new IllegalArgumentException("Negative TTL value: " + ttl);
         }
@@ -59,10 +118,10 @@ public class MyCachingStateRepo implements StateRepository {
      * @param ttl The time in a given {@code ttlTimeUnit} after which a cache entry will expire
      * @param ttlTimeUnit The unit that {@code ttl} is expressed in
      */
-    public MyCachingStateRepo(StateRepository delegate, long ttl, TimeUnit ttlTimeUnit) {
+    private MyCachingStateRepo(StateRepository delegate, long ttl, TimeUnit ttlTimeUnit) {
         this(delegate, ttlTimeUnit.toMillis(ttl));
     }
-
+   
     @Override
     public FeatureState getFeatureState(Feature feature) {
 
@@ -76,8 +135,10 @@ public class MyCachingStateRepo implements StateRepository {
         FeatureState featureState = delegate.getFeatureState(feature);
 
         // cache the result (may be null)
+        
         cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null));
 
+        logger.info("UPDATING THE CACHE");
         // return the result
         return featureState;
 
@@ -105,6 +166,19 @@ public class MyCachingStateRepo implements StateRepository {
         }
 
         return entry.getTimestamp() + ttl < System.currentTimeMillis();
+    }
+    
+    public void showCache(){
+    	for(Map.Entry<String, CacheEntry> entry : cache.entrySet()){
+    		CacheEntry obj = entry.getValue();
+    		logger.info("STATE: " + obj.getState());
+    		/*logger.info("LAST_UPD_SYSUSR_TD: " + obj.getLAST_UPD_SYSUSR_ID());
+    		logger.info("LAST_UPD_TS: " + obj.getLAST_UPD_TS());
+    		logger.info("APP_ENV: " + obj.getAPP_ENV());
+    		logger.info("STRATEGY_ID: " + obj.getSTRATEGY_ID());
+    		logger.info("STRATEGY_PARAMS: " + obj.getSTRATEGY_PARAMS());*/
+    		
+    	}
     }
 
     /**
@@ -139,6 +213,30 @@ public class MyCachingStateRepo implements StateRepository {
         public long getTimestamp() {
             return timestamp;
         }
+
+		public String getLAST_UPD_SYSUSR_ID() {
+			return LAST_UPD_SYSUSR_ID;
+		}
+
+		public String getLAST_UPD_TS() {
+			return LAST_UPD_TS;
+		}
+
+		public String getAPP_ENV() {
+			return APP_ENV;
+		}
+
+		public String getSTRATEGY_ID() {
+			return STRATEGY_ID;
+		}
+
+		public String getSTRATEGY_PARAMS() {
+			return STRATEGY_PARAMS;
+		}
+
+		public String getFEATURE_ID() {
+			return FEATURE_ID;
+		}
 
     }
 

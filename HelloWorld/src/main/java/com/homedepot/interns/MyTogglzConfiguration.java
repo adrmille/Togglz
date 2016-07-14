@@ -23,6 +23,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	//how to configure? have put pom xml, and beans 
 
+
 	private DataSource dataSource;
 
 	public void setDataSource(DataSource dataSource) {
@@ -59,7 +60,8 @@ public class MyTogglzConfiguration implements TogglzConfig {
     		e.printStackTrace();
     	}
     	
-    	return new MyCachingStateRepo(repo, 100000);
+    	MyCachingStateRepo myCache = MyCachingStateRepo.getInstance(repo, 100000);
+    	return myCache;
         //return repo;	
     }
 
