@@ -113,12 +113,23 @@ public class MyCachingStateRepo implements StateRepository {
     private static class CacheEntry {
 
         private final FeatureState state;
-
+        private final String LAST_UPD_SYSUSR_ID;
+        private final String LAST_UPD_TS;
+        private final String APP_ENV;
+        private final String STRATEGY_ID;
+        private final String STRATEGY_PARAMS;
+        private final String FEATURE_ID;
         private final long timestamp;
 
         public CacheEntry(FeatureState state) {
             this.state = state;
             this.timestamp = System.currentTimeMillis();
+            this.STRATEGY_PARAMS = "";
+            this.STRATEGY_ID = "";
+            this.APP_ENV = "";
+            this.LAST_UPD_TS = "";
+            this.LAST_UPD_SYSUSR_ID = "";
+            this.FEATURE_ID = "";
         }
 
         public FeatureState getState() {
