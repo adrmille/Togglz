@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
+//import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
 /**
  * Handles requests for the application home page.
@@ -118,6 +118,8 @@ public class HomeController {
 	public Map retCache(){
 		MyOptionsHelper obj = new MyOptionsHelper();
 		obj.listFeatures();
+		Map rand = null;
+		return rand;
 	}
 	
 }

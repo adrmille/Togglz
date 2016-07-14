@@ -102,7 +102,7 @@ try{
     	String APP_ENV = null;
     	String STRATEGY_ID = null;
         String FEATURE_ID = null;
-        String STRATEGY_PARAMS = null;
+        String STRATEGY_PARAMS = null; 
     	if(resultSet.next()){
     	//Feature_Name = resultSet.getString("FEATURE_NAME");
     		LAST_UPD_SYSUSR_ID = resultSet.getString("LAST_UPD_SYSUSR_ID");
