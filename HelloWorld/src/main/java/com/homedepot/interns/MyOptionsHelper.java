@@ -18,7 +18,8 @@ public class MyOptionsHelper {
 		
 		logger.info("Printing features:");
 		for(MyFeatures value: MyFeatures.values()){
-			logger.info("Name "+ value.name() + " Value: " + value.isActive());
+			value.isActive();
+			//logger.info("Name "+ value.name() + " Value: " + value.isActive());
 		}
 	}
 }

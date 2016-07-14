@@ -1,13 +1,22 @@
 package com.homedepot.interns;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+
+import com.mysql.jdbc.PreparedStatement;
 
 /**
  * 
@@ -18,6 +27,7 @@ import org.togglz.core.repository.StateRepository;
  * 
  */
 public class MyCachingStateRepo implements StateRepository {
+	private static final Logger logger1 = LoggerFactory.getLogger(HomeController.class);
 
     private final StateRepository delegate;
 
@@ -87,7 +97,7 @@ public class MyCachingStateRepo implements StateRepository {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
     
     public void testFunction(){
-    	logger.info("testing testing 123 abc lafdkmfdsk");
+    	logger1.info("testing testing 123 abc lafdkmfdsk");
     }
     private MyCachingStateRepo(StateRepository delegate) {
         this(delegate, 0);
@@ -123,7 +133,7 @@ public class MyCachingStateRepo implements StateRepository {
     }
    
     @Override
-    public FeatureState getFeatureState(Feature feature) {
+    public FeatureState getFeatureState(Feature feature){
 
         // first try to find it from the cache
         CacheEntry entry = cache.get(feature.name());
@@ -135,10 +145,79 @@ public class MyCachingStateRepo implements StateRepository {
         FeatureState featureState = delegate.getFeatureState(feature);
 
         // cache the result (may be null)
-        
-        cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null));
+        Connection connection = null;
+        PreparedStatement statement = null;
 
-        logger.info("UPDATING THE CACHE");
+try{
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
+    	connection = source.getConnection();
+    	String sql = "SELECT * FROM TOGGLZ;";
+    	statement = (PreparedStatement) connection.prepareStatement(sql);
+    	ResultSet resultSet = statement.executeQuery();
+    	//String Feature_Name = null;
+    	String LAST_UPD_SYSUSR_ID = null;
+    	String LAST_UPD_TS = null;
+    	String APP_ENV = null;
+    	String STRATEGY_ID = null;
+        String FEATURE_ID = null;
+        String STRATEGY_PARAMS = null; 
+    	if(resultSet.next()){
+    	//Feature_Name = resultSet.getString("FEATURE_NAME");
+    		LAST_UPD_SYSUSR_ID = resultSet.getString("LAST_UPD_SYSUSR_ID");
+        	LAST_UPD_TS = resultSet.getString("LAST_UPD_TS");
+        	APP_ENV = resultSet.getString("APP_ENV");
+        	STRATEGY_ID = resultSet.getString("STRATEGY_ID");
+            FEATURE_ID = resultSet.getString("FEATURE_ID");
+            STRATEGY_PARAMS = resultSet.getString("STRATEGY_PARAMS");
+    	}
+    	cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null, 
+        		LAST_UPD_SYSUSR_ID, LAST_UPD_TS, APP_ENV, STRATEGY_ID, FEATURE_ID, STRATEGY_PARAMS));
+}
+catch(SQLException ex){
+	
+}
+finally{
+	if(statement != null){
+		try{
+			statement.close();
+		}catch(SQLException ex){
+			
+		}
+	} if (connection != null){
+		try{
+			connection.close();
+		}
+		catch(SQLException ex){
+			
+		}
+	}
+	
+}
+//catch (SQLException ex){
+//	
+//}
+/*
+ * finally {
+  if (stmt != null) {
+    try { 
+      stmt.close();
+    } catch (SQLException ex) {
+    }
+  }
+  if (con != null) {
+    try { 
+      con.close();
+    } catch (SQLException ex) {
+    }
+  }
+}
+
+ */
+    	//logger.info(Feature_Name);
+    	//public CacheEntry(FeatureState state, String LAST_UPD_SYSUSR_ID, String LAST_UPD_TS, String APP_ENV, String STRATEGY_ID, 
+        //String FEATURE_ID, String STRATEGY_PARAMS) 
+
+        logger1.info("UPDATING THE CACHE");
         // return the result
         return featureState;
 
@@ -171,7 +250,7 @@ public class MyCachingStateRepo implements StateRepository {
     public void showCache(){
     	for(Map.Entry<String, CacheEntry> entry : cache.entrySet()){
     		CacheEntry obj = entry.getValue();
-    		logger.info("STATE: " + obj.getState());
+    		logger1.info("STATE: " + obj.getState());
     		/*logger.info("LAST_UPD_SYSUSR_TD: " + obj.getLAST_UPD_SYSUSR_ID());
     		logger.info("LAST_UPD_TS: " + obj.getLAST_UPD_TS());
     		logger.info("APP_ENV: " + obj.getAPP_ENV());
@@ -180,7 +259,20 @@ public class MyCachingStateRepo implements StateRepository {
     		
     	}
     }
-
+    public void setCache() throws SQLException{
+    	
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
+    	Connection connection = source.getConnection();
+    	String sql = "SELECT FEATURE_NAME FROM TOGGLZ WHERE FEATURE_NAME = 'BeehiveFullAuthFeature';";
+    	PreparedStatement statement = (PreparedStatement) connection.prepareStatement(sql);
+    	ResultSet resultSet = statement.executeQuery();
+    	String Feature_Name = null;
+    	if(resultSet.next()){
+    	Feature_Name = resultSet.getString("FEATURE_NAME");
+    	}
+    	logger1.info(Feature_Name);
+    	
+    }
     /**
      * This class represents a cached repository lookup
      */
@@ -195,15 +287,15 @@ public class MyCachingStateRepo implements StateRepository {
         private final String FEATURE_ID;
         private final long timestamp;
 
-        public CacheEntry(FeatureState state) {
+        public CacheEntry(FeatureState state, String LAST_UPD_SYSUSR_ID, String LAST_UPD_TS, String APP_ENV, String STRATEGY_ID, String FEATURE_ID, String STRATEGY_PARAMS) {
             this.state = state;
             this.timestamp = System.currentTimeMillis();
-            this.STRATEGY_PARAMS = "";
-            this.STRATEGY_ID = "";
-            this.APP_ENV = "";
-            this.LAST_UPD_TS = "";
-            this.LAST_UPD_SYSUSR_ID = "";
-            this.FEATURE_ID = "";
+            this.STRATEGY_PARAMS = STRATEGY_PARAMS;
+            this.STRATEGY_ID = STRATEGY_ID;
+            this.APP_ENV = APP_ENV;
+            this.LAST_UPD_TS = LAST_UPD_TS;
+            this.LAST_UPD_SYSUSR_ID = LAST_UPD_SYSUSR_ID ;
+            this.FEATURE_ID = FEATURE_ID;
         }
 
         public FeatureState getState() {
