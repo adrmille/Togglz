@@ -46,47 +46,7 @@ public class MyCachingStateRepo implements StateRepository {
     public static MyCachingStateRepo getInstance(){
     	return instance;
     }
-    /*
-     * public class ClassicSingleton {
 
-   private static ClassicSingleton instance = null;
-   private ClassicSingleton() {
-      // Exists only to defeat instantiation.
-   }
-   public static ClassicSingleton getInstance() {
-      if(instance == null) {
-         instance = new ClassicSingleton();
-      }
-      return instance;
-   }
-}
-     * 
-     * 
-     */
-
-    /*
-	private OptionsRegistry(){}
-	
-	/**
-	 * The Lazy Initialization-on-demand holder, until we need an instance, the OptionsRegistryHolder class will not be initialized 
-	 * until required and it can still use other static members of OptionsRegistry class.
-	 * 
-	 * @author AXG8965
-	 *
-	 
-	private static class OptionsRegistryHolder {
-		private static final OptionsRegistry INSTANCE = new OptionsRegistry();
-	}
-	
-	/** 
-	 * It returns singleton instance of the OptionsRegistry class
-	 * @return
-	 
-	public static OptionsRegistry getInstance() {
-		return OptionsRegistryHolder.INSTANCE;
-	}
-	*/
-    
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will only expire if
      * {@link #setFeatureState(FeatureState)} is invoked. You should therefore never use this constructor if the feature state
