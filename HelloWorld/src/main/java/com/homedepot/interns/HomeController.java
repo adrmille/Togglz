@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
 /**
  * Handles requests for the application home page.
@@ -111,9 +114,10 @@ public class HomeController {
 		logger.info("Result page has been submitted");
 		return "result";
 	}
-	/*@RequestMapping(value = "/retCache", method = RequestMethod.GET)
+	@RequestMapping(value = "/retCache", method = RequestMethod.GET, produces={"application/xml","application/json","text/plain"})
 	public Map retCache(){
-	
-	}*/
+		MyOptionsHelper obj = new MyOptionsHelper();
+		obj.listFeatures();
+	}
 	
 }

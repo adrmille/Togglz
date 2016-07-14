@@ -1,5 +1,7 @@
 package com.homedepot.interns;
 
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -47,7 +49,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			e2.printStackTrace();
 		}
 		
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "tester123");
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
     	MyJDBCStateRepo repo = null;
 
     	try {
@@ -56,8 +58,15 @@ public class MyTogglzConfiguration implements TogglzConfig {
     	catch(Exception e) {
     		e.printStackTrace();
     	}
-    	
-    	return new MyCachingStateRepo(repo, 100000);
+    	MyCachingStateRepo cachRepo = new MyCachingStateRepo(repo,100000);
+//    	try {
+//    		logger.info("about to set cache");
+//			cachRepo.setCache();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+    	return cachRepo;
         //return repo;	
     }
 
