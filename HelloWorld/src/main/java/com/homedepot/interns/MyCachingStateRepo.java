@@ -149,9 +149,9 @@ public class MyCachingStateRepo implements StateRepository {
         PreparedStatement statement = null;
 
 try{
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
     	connection = source.getConnection();
-    	String sql = "SELECT * FROM TOGGLZ;";
+    	String sql = "SELECT * FROM TOGGLZ WHERE FEATURE_NAME = '" + feature.name() + "';";
     	statement = (PreparedStatement) connection.prepareStatement(sql);
     	ResultSet resultSet = statement.executeQuery();
     	//String Feature_Name = null;
@@ -250,12 +250,13 @@ finally{
     public void showCache(){
     	for(Map.Entry<String, CacheEntry> entry : cache.entrySet()){
     		CacheEntry obj = entry.getValue();
-    		logger1.info("STATE: " + obj.getState());
-    		/*logger.info("LAST_UPD_SYSUSR_TD: " + obj.getLAST_UPD_SYSUSR_ID());
+    		logger.info(entry.getKey());
+    		logger.info("STATE: " + obj.getState());
+    		logger.info("LAST_UPD_SYSUSR_TD: " + obj.getLAST_UPD_SYSUSR_ID());
     		logger.info("LAST_UPD_TS: " + obj.getLAST_UPD_TS());
     		logger.info("APP_ENV: " + obj.getAPP_ENV());
     		logger.info("STRATEGY_ID: " + obj.getSTRATEGY_ID());
-    		logger.info("STRATEGY_PARAMS: " + obj.getSTRATEGY_PARAMS());*/
+    		logger.info("STRATEGY_PARAMS: " + obj.getSTRATEGY_PARAMS());
     		
     	}
     }

@@ -59,6 +59,7 @@ public class HomeController {
 		
 		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
 		cache.testFunction();
+		logger.info("Show contents of cache");
 		cache.showCache();
 
 		Calendar cal = Calendar.getInstance();
