@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 //import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
@@ -119,12 +120,21 @@ public class HomeController {
 		logger.info("Result page has been submitted");
 		return "result";
 	}
-	@RequestMapping(value = "/retCache", method = RequestMethod.GET, produces={"application/xml","application/json","text/plain"})
-	public Map retCache(){
-		MyOptionsHelper obj = new MyOptionsHelper();
+	
+	@RequestMapping(value = "/retCache", method=RequestMethod.GET)
+	public @ResponseBody Greeting retCache(){
+		/*MyOptionsHelper obj = new MyOptionsHelper();
 		obj.listFeatures();
 		Map rand = null;
-		return rand;
+		return rand;*/
+		Greeting greet = new Greeting();
+		greet.setId(1);
+		greet.setRecipient("me");
+		greet.setMessage("hello");
+		greet.setSender("you");
+		logger.info("RETURN GREETING");
+		
+		return greet;
 	}
 	
 }
