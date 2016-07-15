@@ -121,7 +121,7 @@ public class HomeController {
 		return "result";
 	}
 	
-	@RequestMapping(value = "/retCache", method=RequestMethod.GET)
+	@RequestMapping(value = "/retCache", method=RequestMethod.GET, produces = "application/json")
 	public @ResponseBody Greeting retCache(){
 		/*MyOptionsHelper obj = new MyOptionsHelper();
 		obj.listFeatures();
