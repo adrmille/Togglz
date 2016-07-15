@@ -16,7 +16,7 @@ public class MyOptionsHelper {
 	//function returns all feature switches with the on/off value
 	public void listFeatures(){
 		
-		logger.info("Printing features:");
+		//logger.info("Printing features:");
 		for(MyFeatures value: MyFeatures.values()){
 			value.isActive();
 			//logger.info("Name "+ value.name() + " Value: " + value.isActive());

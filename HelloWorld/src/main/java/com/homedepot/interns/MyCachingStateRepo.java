@@ -225,20 +225,7 @@ finally{
     		
     	}
     }
-    public void setCache() throws SQLException{
-    	
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
-    	Connection connection = source.getConnection();
-    	String sql = "SELECT FEATURE_NAME FROM TOGGLZ WHERE FEATURE_NAME = 'BeehiveFullAuthFeature';";
-    	PreparedStatement statement = (PreparedStatement) connection.prepareStatement(sql);
-    	ResultSet resultSet = statement.executeQuery();
-    	String Feature_Name = null;
-    	if(resultSet.next()){
-    	Feature_Name = resultSet.getString("FEATURE_NAME");
-    	}
-    	logger1.info(Feature_Name);
-    	
-    }
+ 
     /**
      * This class represents a cached repository lookup
      */

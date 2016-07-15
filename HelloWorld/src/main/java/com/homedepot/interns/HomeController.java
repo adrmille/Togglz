@@ -137,6 +137,8 @@ public class HomeController {
 //		logger.info("RETURN GREETING");
 //		
 //		return greet;
+		MyOptionsHelper op = new MyOptionsHelper();
+		op.listFeatures();
 		
 		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
 		return (Map<String, CacheEntry>) cache.getMap();
