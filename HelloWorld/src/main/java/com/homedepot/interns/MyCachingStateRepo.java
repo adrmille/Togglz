@@ -43,6 +43,11 @@ public class MyCachingStateRepo implements StateRepository {
     	
     }
     
+    public Map<String, CacheEntry> getMap(){ 
+    	return cache; 
+     } 
+
+    
     public static MyCachingStateRepo getInstance(){
     	return instance;
     }
@@ -237,7 +242,7 @@ finally{
     /**
      * This class represents a cached repository lookup
      */
-    private static class CacheEntry {
+     static class CacheEntry {
 
         private final FeatureState state;
         private final String LAST_UPD_SYSUSR_ID;

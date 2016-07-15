@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
+
 //import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
 /**
@@ -122,19 +124,22 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/retCache", method=RequestMethod.GET, produces = "application/json")
-	public @ResponseBody Greeting retCache(){
+	public @ResponseBody Map<String, CacheEntry> retCache(){
 		/*MyOptionsHelper obj = new MyOptionsHelper();
 		obj.listFeatures();
 		Map rand = null;
 		return rand;*/
-		Greeting greet = new Greeting();
-		greet.setId(1);
-		greet.setRecipient("me");
-		greet.setMessage("hello");
-		greet.setSender("you");
-		logger.info("RETURN GREETING");
+//		Greeting greet = new Greeting();
+//		greet.setId(1);
+//		greet.setRecipient("me");
+//		greet.setMessage("hello");
+//		greet.setSender("you");
+//		logger.info("RETURN GREETING");
+//		
+//		return greet;
 		
-		return greet;
+		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
+		return (Map<String, CacheEntry>) cache.getMap();
 	}
 	
 }
