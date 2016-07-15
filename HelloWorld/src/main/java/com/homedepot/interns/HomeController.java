@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
+
+//import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
 /**
  * Handles requests for the application home page.
@@ -51,6 +57,13 @@ public class HomeController {
 	@RequestMapping(value = "/addTime", method = RequestMethod.POST)
 	public String addTiming(@ModelAttribute("interns")User user, ModelMap model){
 		//model.addAttribute("name", user.getName());
+		MyOptionsHelper op = new MyOptionsHelper();
+		op.listFeatures();
+		
+		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
+		cache.testFunction();
+		logger.info("Show contents of cache");
+		cache.showCache();
 
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -80,6 +93,8 @@ public class HomeController {
 			logger.info("The user can't see the message");
 		}
 		
+		MyFeatures.class.getEnumConstants();
+	
 		return "timeresult";
 	}
 	
@@ -96,7 +111,7 @@ public class HomeController {
 		logger.info("User has entered form page");
 		return new ModelAndView("form", "command", new Greeting());
 	}
-	
+	 
 	@RequestMapping(value = "/addForm", method = RequestMethod.POST)
 	public String addForm(@ModelAttribute("interns")Greeting greeting,
 			ModelMap model){
@@ -108,5 +123,25 @@ public class HomeController {
 		return "result";
 	}
 	
+	@RequestMapping(value = "/retCache", method=RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Map<String, CacheEntry> retCache(){
+		/*MyOptionsHelper obj = new MyOptionsHelper();
+		obj.listFeatures();
+		Map rand = null;
+		return rand;*/
+//		Greeting greet = new Greeting();
+//		greet.setId(1);
+//		greet.setRecipient("me");
+//		greet.setMessage("hello");
+//		greet.setSender("you");
+//		logger.info("RETURN GREETING");
+//		
+//		return greet;
+		MyOptionsHelper op = new MyOptionsHelper();
+		op.listFeatures();
+		
+		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
+		return (Map<String, CacheEntry>) cache.getMap();
+	}
 	
 }

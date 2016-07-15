@@ -7,12 +7,19 @@ import org.togglz.core.context.FeatureContext;
 
 public enum MyFeatures implements Feature {
 
+	//will add the enums later 
 	 @EnabledByDefault
-	    @Label("First Feature")
 	    FEATURE_ONE,
-
-	    @Label("Second Feature")
-	    FEATURE_TWO;
+	 @EnabledByDefault 
+	    FEATURE_TWO,
+	 @EnabledByDefault 
+	    FEATURE_THREE,
+	    PipSearchNav2BannerFeatureSwitch,
+	    MyAccountSOCCFeature,
+	    HFMobileTypeAhead;
+	
+	
+	 
 
 	    public boolean isActive() {
 	        return FeatureContext.getFeatureManager().isActive(this);
