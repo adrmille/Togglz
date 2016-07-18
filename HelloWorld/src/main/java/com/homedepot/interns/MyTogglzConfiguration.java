@@ -39,7 +39,6 @@ public class MyTogglzConfiguration implements TogglzConfig {
 	@Override
     public StateRepository getStateRepository(){
     	
-//    	return new FileBasedStateRepository(new File("/tmp/features.properties"));
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -52,6 +51,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
     	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
 
     	MyJDBCStateRepo repo = null;
+
 
     	try {
     		repo = new MyJDBCStateRepo(source);
