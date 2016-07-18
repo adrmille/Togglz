@@ -114,7 +114,7 @@ public class MyCachingStateRepo implements StateRepository {
         PreparedStatement statement = null;
 
 try{
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
     	connection = source.getConnection();
     	String sql = "SELECT * FROM TOGGLZ WHERE FEATURE_NAME = '" + feature.name() + "';";
     	statement = (PreparedStatement) connection.prepareStatement(sql);
@@ -229,6 +229,70 @@ finally{
     /**
      * This class represents a cached repository lookup
      */
+    static class MyCacheEntry {
+
+        private final FeatureState state;
+        private final String LAST_UPD_SYSUSR_ID;
+        private final String LAST_UPD_TS;
+        private final String APP_ENV;
+        private final String STRATEGY_ID;
+        private final String STRATEGY_PARAMS;
+        private final String FEATURE_ID;
+        private final long timestamp;
+
+        public MyCacheEntry(FeatureState state, String LAST_UPD_SYSUSR_ID, String LAST_UPD_TS, String APP_ENV, String STRATEGY_ID, String FEATURE_ID, String STRATEGY_PARAMS) {
+            this.state = state;
+            this.timestamp = System.currentTimeMillis();
+            this.STRATEGY_PARAMS = STRATEGY_PARAMS;
+            this.STRATEGY_ID = STRATEGY_ID;
+            this.APP_ENV = APP_ENV;
+            this.LAST_UPD_TS = LAST_UPD_TS;
+            this.LAST_UPD_SYSUSR_ID = LAST_UPD_SYSUSR_ID ;
+            this.FEATURE_ID = FEATURE_ID;
+        }
+        public MyCacheEntry(){
+        	this.state = null;
+            this.timestamp = System.currentTimeMillis();
+            this.STRATEGY_PARAMS = "";
+            this.STRATEGY_ID = "";
+            this.APP_ENV = "";
+            this.LAST_UPD_TS = "";
+            this.LAST_UPD_SYSUSR_ID = "" ;
+            this.FEATURE_ID = "";
+        }
+        public boolean getState() {
+            return state;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+		public String getLAST_UPD_SYSUSR_ID() {
+			return LAST_UPD_SYSUSR_ID;
+		}
+
+		public String getLAST_UPD_TS() {
+			return LAST_UPD_TS;
+		}
+
+		public String getAPP_ENV() {
+			return APP_ENV;
+		}
+
+		public String getSTRATEGY_ID() {
+			return STRATEGY_ID;
+		}
+
+		public String getSTRATEGY_PARAMS() {
+			return STRATEGY_PARAMS;
+		}
+
+		public String getFEATURE_ID() {
+			return FEATURE_ID;
+		}
+
+    }
      static class CacheEntry {
 
         private final FeatureState state;
@@ -250,7 +314,16 @@ finally{
             this.LAST_UPD_SYSUSR_ID = LAST_UPD_SYSUSR_ID ;
             this.FEATURE_ID = FEATURE_ID;
         }
-
+        public CacheEntry(){
+        	this.state = null;
+            this.timestamp = System.currentTimeMillis();
+            this.STRATEGY_PARAMS = "";
+            this.STRATEGY_ID = "";
+            this.APP_ENV = "";
+            this.LAST_UPD_TS = "";
+            this.LAST_UPD_SYSUSR_ID = "" ;
+            this.FEATURE_ID = "";
+        }
         public FeatureState getState() {
             return state;
         }
