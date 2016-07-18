@@ -229,6 +229,7 @@ finally{
     /**
      * This class represents a cached repository lookup
      */
+    /*
     static class MyCacheEntry {
 
         private final FeatureState state;
@@ -292,7 +293,7 @@ finally{
 			return FEATURE_ID;
 		}
 
-    }
+    }*/
      static class CacheEntry {
 
         private final FeatureState state;
