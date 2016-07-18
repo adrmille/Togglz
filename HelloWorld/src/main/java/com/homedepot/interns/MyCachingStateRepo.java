@@ -84,6 +84,7 @@ public class MyCachingStateRepo implements StateRepository {
         this.delegate = delegate;
         this.ttl = ttl;
     }
+    
 
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
@@ -182,7 +183,7 @@ finally{
     	//public CacheEntry(FeatureState state, String LAST_UPD_SYSUSR_ID, String LAST_UPD_TS, String APP_ENV, String STRATEGY_ID, 
         //String FEATURE_ID, String STRATEGY_PARAMS) 
 
-        logger1.info("UPDATING THE CACHE");
+        //logger1.info("UPDATING THE CACHE");
         // return the result
         return featureState;
 
@@ -304,7 +305,10 @@ finally{
         private final String STRATEGY_PARAMS;
         private final String FEATURE_ID;
         private final long timestamp;
+        
+        //public Cache
 
+        
         public CacheEntry(FeatureState state, String LAST_UPD_SYSUSR_ID, String LAST_UPD_TS, String APP_ENV, String STRATEGY_ID, String FEATURE_ID, String STRATEGY_PARAMS) {
             this.state = state;
             this.timestamp = System.currentTimeMillis();
