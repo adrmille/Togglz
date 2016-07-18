@@ -49,8 +49,10 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/time", method = RequestMethod.GET)
-	public ModelAndView timing(){
+	public ModelAndView timing() throws Exception{
 		logger.info("User has entered timing page");
+		//MyOptionsRegistry me = MyOptionsRegistry.getInstance();
+		//me.populate();
 		return new ModelAndView("time", "command", new User());
 	}
 	
@@ -124,7 +126,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/retCache", method=RequestMethod.GET, produces = "application/json")
-	public @ResponseBody Map<String, CacheEntry> retCache(){
+	public @ResponseBody Map<String, CacheEntry> retCache() throws Exception{
 		/*MyOptionsHelper obj = new MyOptionsHelper();
 		obj.listFeatures();
 		Map rand = null;
@@ -141,6 +143,7 @@ public class HomeController {
 		op.listFeatures();
 		
 		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
+		
 		return (Map<String, CacheEntry>) cache.getMap();
 	}
 	
