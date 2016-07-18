@@ -1,5 +1,7 @@
 package com.homedepot.interns;
 
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -9,8 +11,10 @@ import org.springframework.stereotype.Component;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
-import org.togglz.core.repository.cache.CachingStateRepository;
-import org.togglz.core.repository.jdbc.JDBCStateRepository;
+//import org.togglz.core.repository.cache.CachingStateRepository;
+import com.homedepot.interns.MyCachingStateRepo;
+//import org.togglz.core.repository.jdbc.JDBCStateRepository;
+import com.homedepot.interns.MyJDBCStateRepo; //OUR jdbc
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
@@ -20,6 +24,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	//how to configure? have put pom xml, and beans 
+
 
 	private DataSource dataSource;
 
@@ -35,7 +40,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
     public StateRepository getStateRepository(){
     	
 //    	return new FileBasedStateRepository(new File("/tmp/features.properties"));
-    	
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e2) {
@@ -43,18 +48,21 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			e2.printStackTrace();
 		}
 		
-		DataSource source = new DriverManagerDataSource("jdbc:mysql://104.197.225.58:3306/togglz", "remote", "tester123");
-    	JDBCStateRepository repo = null;
+
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
+
+    	MyJDBCStateRepo repo = null;
 
     	try {
-    		repo = new JDBCStateRepository(source);
+    		repo = new MyJDBCStateRepo(source);
     	}
     	catch(Exception e) {
     		e.printStackTrace();
     	}
     	
-    	return new CachingStateRepository(repo, 100000);
-        //return repo;	
+    	MyCachingStateRepo myCache = MyCachingStateRepo.getInstance(repo, 100000);
+    	return myCache;
+
     }
 
     public UserProvider getUserProvider() {
