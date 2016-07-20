@@ -223,7 +223,7 @@ public class MyJDBCStateRepo implements StateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
-                String sql = "SELECT FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = ?";
+                String sql = "SELECT FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = ? AND APP_ENV = 'live'";
                 PreparedStatement statement = connection.prepareStatement(insertTableName(sql));
                 try {
 
@@ -286,7 +286,7 @@ public class MyJDBCStateRepo implements StateRepository {
                 /*
                  * First try to update an existing row
                  */
-                String updateSql = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, STRATEGY_ID = ?, STRATEGY_PARAMS = ? WHERE FEATURE_NAME = ?";
+                String updateSql = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, STRATEGY_ID = ?, STRATEGY_PARAMS = ? WHERE FEATURE_NAME = ? AND APP_ENV = 'live'";
                 PreparedStatement updateStatement = connection.prepareStatement(insertTableName(updateSql));
                 try {
 
