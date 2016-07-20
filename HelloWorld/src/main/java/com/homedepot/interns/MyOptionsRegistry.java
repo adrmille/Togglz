@@ -18,14 +18,6 @@ import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 public class MyOptionsRegistry {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	/*
-	make sure to copy class over to TWS
-	CONTENTS OF JSON
-	"FEATURE_THREE":{"state":{"feature":"FEATURE_THREE",
-	"enabled":true,"strategyId":null,"users":[],"parameterMap":{},"parameterNames":[]},
-	"timestamp":1468848145769,"last_UPD_SYSUSR_ID":null,"last_UPD_TS":null,"app_ENV":null,
-	"strategy_ID":null,"strategy_PARAMS":null,"feature_ID":"19737eba-4839-11e6-a160-080027b4ff49"},
-	*/
 	
 	private Map<String,CacheEntry> cacheMap;
 	
@@ -65,7 +57,7 @@ public class MyOptionsRegistry {
 			for(Map.Entry<String, MyCacheEntry> entry : temp.entrySet()){
 	    		MyCacheEntry obj = entry.getValue();
 	    		logger.info(entry.getKey());
-	    		logger.info("STATE: " + obj.getState());
+	    		logger.info("STATE: " + obj.getState().isEnabled());
 	    		logger.info("LAST_UPD_SYSUSR_TD: " + obj.getLAST_UPD_SYSUSR_ID());
 	    		logger.info("LAST_UPD_TS: " + obj.getLAST_UPD_TS());
 	    		logger.info("APP_ENV: " + obj.getAPP_ENV());

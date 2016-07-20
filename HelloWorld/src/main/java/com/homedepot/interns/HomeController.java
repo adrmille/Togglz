@@ -1,6 +1,5 @@
 package com.homedepot.interns;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,13 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
-import com.homedepot.interns.MyCacheEntry;
 
 //import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
@@ -57,8 +50,6 @@ public class HomeController {
 	@RequestMapping(value = "/time", method = RequestMethod.GET)
 	public ModelAndView timing() throws Exception{
 		logger.info("User has entered timing page");
-		MyOptionsRegistry me = MyOptionsRegistry.getInstance();
-		me.populate();
 		return new ModelAndView("time", "command", new User());
 	}
 	
@@ -107,9 +98,10 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test(Model model){
-		logger.info("User has entered test page");
-		String greetings = "Hello world again";
+	public String test(Model model) throws Exception{
+		MyOptionsRegistry me = MyOptionsRegistry.getInstance();
+		me.populate();
+		String greetings = "Populating the OptionsRegistry HashMap";
 		model.addAttribute("message", greetings);
 		return "test";
 	}
