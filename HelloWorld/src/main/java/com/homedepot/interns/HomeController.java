@@ -33,7 +33,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home!", locale);
 		
@@ -95,7 +95,7 @@ public class HomeController {
 		MyFeatures.class.getEnumConstants();
 	
 		return "timeresult";
-	}
+	}*/
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test(Model model) throws Exception{
@@ -106,7 +106,7 @@ public class HomeController {
 		return "test";
 	}
 	
-	@RequestMapping(value = "/form", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public ModelAndView form(){
 		logger.info("User has entered form page");
 		return new ModelAndView("form", "command", new Greeting());
@@ -122,21 +122,10 @@ public class HomeController {
 		logger.info("Result page has been submitted");
 		return "result";
 	}
-	
+	*/
 	@RequestMapping(value = "/retCache", method=RequestMethod.GET, produces = "application/json")
 	public @ResponseBody Map<String, CacheEntry> retCache() throws Exception{
-		/*MyOptionsHelper obj = new MyOptionsHelper();
-		obj.listFeatures();
-		Map rand = null;
-		return rand;*/
-//		Greeting greet = new Greeting();
-//		greet.setId(1);
-//		greet.setRecipient("me");
-//		greet.setMessage("hello");
-//		greet.setSender("you");
-//		logger.info("RETURN GREETING");
-//		
-//		return greet;
+		
 		MyOptionsHelper op = new MyOptionsHelper();
 		op.listFeatures();
 		
