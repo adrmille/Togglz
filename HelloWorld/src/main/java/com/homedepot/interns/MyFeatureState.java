@@ -1,3 +1,6 @@
+/**
+ * This class needs to be added to whichever application will be hitting Togglz' endpoints. 
+ */
 package com.homedepot.interns;
 
 import java.util.HashMap;
@@ -20,7 +23,6 @@ public class MyFeatureState {
 		this.parameters = null;
 	}
 
-	
 	  public String getFeature() {
 			return feature;
 		}

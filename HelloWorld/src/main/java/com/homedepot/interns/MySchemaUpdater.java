@@ -15,7 +15,7 @@ import org.togglz.core.util.Strings;
 /**
  * Class that creates and migrates the database table required by {@link JDBCStateRepository}.
  * 
- * @author Christian Kaltepoth
+ * @author Christian Kaltepoth, RXS6631, DXR3590
  */
 class MySchemaUpdater {
 
@@ -34,7 +34,11 @@ class MySchemaUpdater {
     protected boolean doesTableExist() throws SQLException {
         return isSuccessful("SELECT * FROM %TABLE%");
     }
-
+/**
+ * Creates the Togglz table with the proper feature switch attributes. We edited this to include specific Home Depot field names.
+ * 
+ * @throws SQLException
+ */
     protected void migrateToVersion1() throws SQLException {
         execute("CREATE TABLE %TABLE% (FEATURE_ID CHAR(16),"
         		+ "FEATURE_NAME VARCHAR(100) PRIMARY KEY,"
@@ -50,7 +54,10 @@ class MySchemaUpdater {
     protected boolean isSchemaVersion1() throws SQLException {
         return columnExists(MyColumns.FEATURE_NAME) && !columnExists(MyColumns.STRATEGY_ID);
     }
-
+/**
+ * Function as provided by Togglz. Its called when database connection is made to update the cache
+ * @throws SQLException
+ */
     protected void migrateToVersion2() throws SQLException {
 
         /*
