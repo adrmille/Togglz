@@ -5,6 +5,13 @@ import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.Label;
 import org.togglz.core.context.FeatureContext;
 
+/**
+ * Togglz required MyFeatures class that connects allows for complete Togglz functionality
+ * it is necessary to define your feature switches in this class
+ * @author danielle
+ *
+ */
+
 public enum MyFeatures implements Feature {
 
 	 

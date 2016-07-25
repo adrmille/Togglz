@@ -1,6 +1,14 @@
 package com.homedepot.interns;
 
+/**
+ * 
+ * Class for the column names string constants
+ * @author danielle
+ *
+ */
+
 class MyColumns {
+	
 	public static final String FEATURE_ID = "FEATURE_ID";
 	public static final String FEATURE_NAME = "FEATURE_NAME";
 	public static final String FEATURE_ENABLED = "FEATURE_ENABLED";
