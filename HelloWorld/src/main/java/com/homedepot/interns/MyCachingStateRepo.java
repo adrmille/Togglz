@@ -32,17 +32,23 @@ import com.mysql.jdbc.PreparedStatement;
  * Caching State Repository that is tailored to the needs of THD
  * The Cache holds MyCacheEntry Objects that contain all the information about the feature
  * switches that can be found in the mysql database
- * @author danielle
+ * @author DXR3590, RXS6631
  *
  */
 public class MyCachingStateRepo implements StateRepository {
-	private static final Logger logger1 = LoggerFactory.getLogger(HomeController.class);
+	
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+	//the primary state repository, in this case the mysql database
 	private final StateRepository delegate;
 
+	//the cache that holds all the feature switch values at a certain time,
+	//which can be returned at the end point as a json
 	private final Map<String, CacheEntry> cache = new ConcurrentHashMap<String, CacheEntry>();
 
+	//cache time before refresh
 	private long ttl;
+	
 	private static MyCachingStateRepo instance = null;
 
 	//this is a singleton class, so public method to get the instance of the class
@@ -54,10 +60,18 @@ public class MyCachingStateRepo implements StateRepository {
 
 	}
 
+	/**
+	 * 
+	 * @return the cache that holds all the feature switch information
+	 */
 	public Map<String, CacheEntry> getMap() {
 		return cache;
 	}
 
+	/**
+	 * 
+	 * @return get the instance of the singletone MyCachingStateRepo cache
+	 */
 	public static MyCachingStateRepo getInstance() {
 		return instance;
 	}
@@ -72,13 +86,12 @@ public class MyCachingStateRepo implements StateRepository {
 	 * @param delegate
 	 *            The repository to delegate invocations to
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
 	
 	private MyCachingStateRepo(StateRepository delegate) {
 		this(delegate, 0);
 	}
 
+	
 	/**
 	 * Creates a caching facade for the supplied {@link StateRepository}. The
 	 * cached state of a feature will expire after the supplied TTL or if
