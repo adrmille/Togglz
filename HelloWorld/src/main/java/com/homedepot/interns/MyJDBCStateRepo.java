@@ -73,7 +73,7 @@ import org.togglz.core.util.Strings;
  * strategy mechanism. The table structure will be automatically migrated to the new format.
  * </p>
  * 
- * @author Christian Kaltepoth
+ * @author Christian Kaltepoth, RXS6631, DXR3590
  * 
  */
 public class MyJDBCStateRepo implements StateRepository {
