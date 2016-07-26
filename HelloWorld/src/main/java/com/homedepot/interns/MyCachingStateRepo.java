@@ -161,7 +161,7 @@ public class MyCachingStateRepo implements StateRepository {
 		 */
 
 		try {
-			DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
+			DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
 			connection = source.getConnection();
 			String sql = "SELECT * FROM TOGGLZ WHERE FEATURE_NAME = '" + feature.name() + "' AND APP_ENV ='live';";
 			statement = (PreparedStatement) connection.prepareStatement(sql);

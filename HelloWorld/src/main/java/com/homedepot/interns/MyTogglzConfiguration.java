@@ -49,7 +49,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			e2.printStackTrace();
 		}
 		
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
 
     	MyJDBCStateRepo repo = null;
 
