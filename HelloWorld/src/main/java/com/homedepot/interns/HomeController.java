@@ -2,6 +2,7 @@ package com.homedepot.interns;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -19,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
-//import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
 /**
  * Handles requests for the application home page.
@@ -28,7 +28,6 @@ import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	private static final Map<String, CacheEntry> String = null;
 	
 	/**
 	 * @return
@@ -36,7 +35,7 @@ public class HomeController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/retCache", method=RequestMethod.GET, produces = "application/json")
-	public @ResponseBody Map<String, CacheEntry> retCache() throws Exception{
+	public @ResponseBody Map<String, CacheEntry> retCache() throws ConcurrentModificationException {
 		
 		MyOptionsHelper op = new MyOptionsHelper();
 		//use togglz values to populate the map

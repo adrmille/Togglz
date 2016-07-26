@@ -46,7 +46,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e2) {
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			logger.info("MyTogglzConfig getStateRepository() Driver not found");
 		}
 		
     	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
@@ -57,7 +57,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
     		repo = new MyJDBCStateRepo(source);
     	}
     	catch(Exception e) {
-    		e.printStackTrace();
+    		logger.info("MyTogglzConfig getStateRepository() Cannot instantiate JDBC state repo");
     	}
     	
     	MyCachingStateRepo myCache = MyCachingStateRepo.getInstance(repo, 100000);
