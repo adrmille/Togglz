@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
 
-//import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
+
 
 /**
  * Handles requests for the application home page.
@@ -43,8 +43,16 @@ public class HomeController {
 		op.listFeatures();
 		
 		MyCachingStateRepo cache = MyCachingStateRepo.getInstance();
+		Map<String, CacheEntry> map = null;
 
-		return (Map<String, CacheEntry>) cache.getMap();
+		//try{
+			 map = cache.getMap();
+//		}
+//		catch(NullPointerException e){
+//			e.printStackTrace();
+//		}
+		return map;
+		//(Map<String, CacheEntry>) cache.getMap()
 	}
 	
 }

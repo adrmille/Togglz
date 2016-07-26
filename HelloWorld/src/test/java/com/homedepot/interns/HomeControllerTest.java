@@ -1,5 +1,5 @@
 package com.homedepot.interns;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
@@ -7,11 +7,14 @@ import java.util.Map;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.stubbing.OngoingStubbing;
 
-import com.homedepot.interns.MyCachingStateRepo.CacheEntry; 
+import com.homedepot.interns.MyCachingStateRepo.CacheEntry;
+import com.homedepot.interns.MyCacheEntry;
 
 public class HomeControllerTest {
-	Map<String, CacheEntry> test;
+	//Map<String, CacheEntry> test;
+	Map<String, MyCacheEntry> map;
 	@Mock
 	MyCachingStateRepo mockedObj;
 	@InjectMocks
@@ -21,8 +24,23 @@ public class HomeControllerTest {
 	public void testRetCache(){
 		//MyCachingStateRepo repo = mock(MyCachingStateRepo.class);
 		
-		Map<String, MyCacheEntry> map;
+		MyCachingStateRepo repo;
+		//repo.set//setting the map
 		
+		//Map<String, CacheEntry> actual = new ConcurrentHashMap<String, CacheEntry>();
+		//when(map.get(anyString()).thenReturn("success");
+		//when()
+		
+		
+		//in thenReturn call the method that creates your map
+		
+		//mockMvc.perform("/retCache"); //mockMvc search
+		
+		assertNotNull(when(((OngoingStubbing<Object>) mockedObj.getMap()).thenReturn(getMap())));
+		
+		//make your assert statements
+	}
+	public Map<String, MyCacheEntry> getMap(){
 		MyFeatureState obj2 = new MyFeatureState();
 		obj2.setEnabled(true);
 		obj2.setFeature(null);
@@ -39,29 +57,20 @@ public class HomeControllerTest {
 		
 		String test = "feature1";
 		map.put(test,obj);
-		MyCachingStateRepo repo;
-		repo.set//setting the map
-		//
-		//Map<String, CacheEntry> actual = new ConcurrentHashMap<String, CacheEntry>();
-		//when(map.get(anyString()).thenReturn("success");
-		//when()
-		when(mockedObj.getInstance()).thenReturn(repo);
-	
-		mockMvc.perform("/retCache"); //mockMvc search
-	
+		return map;
 	}
-	@Test
-	public void setup(){
-		initMocks(this);
-	}
+//	@Test
+//	public void setup(){
+//		initMocks(this);
+//	}
 //	@Test (expected = java.lang.Exception.class)
 //	public void testException(){
 //		
 //	}
 	@Test(expected = java.lang.NullPointerException.class)
 	public void testNullInput(){
-		MyCachingStateRepo repo = null;
-		
+		//MyCachingStateRepo repo = null;
+		assertNull(map);
 		
 	}
 	//test failure, issue with getting with the cache
