@@ -11,19 +11,22 @@ import org.springframework.stereotype.Component;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
-//import org.togglz.core.repository.cache.CachingStateRepository;
 import com.homedepot.interns.MyCachingStateRepo;
-//import org.togglz.core.repository.jdbc.JDBCStateRepository;
-import com.homedepot.interns.MyJDBCStateRepo; //OUR jdbc
+import com.homedepot.interns.MyJDBCStateRepo; 
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
 
+/**
+ * 
+ * Establishes database connection
+ * @author RXS6631, DXR3590
+ *
+ */
 @Component
 public class MyTogglzConfiguration implements TogglzConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	//how to configure? have put pom xml, and beans 
 
 
 	private DataSource dataSource;
@@ -39,16 +42,15 @@ public class MyTogglzConfiguration implements TogglzConfig {
 	@Override
     public StateRepository getStateRepository(){
     	
-
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e2) {
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			logger.info("MyTogglzConfig getStateRepository() Driver not found");
 		}
 		
 
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "Rcs12345");
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
 
     	MyJDBCStateRepo repo = null;
 
@@ -57,7 +59,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
     		repo = new MyJDBCStateRepo(source);
     	}
     	catch(Exception e) {
-    		e.printStackTrace();
+    		logger.info("MyTogglzConfig getStateRepository() Cannot instantiate JDBC state repo");
     	}
     	
     	MyCachingStateRepo myCache = MyCachingStateRepo.getInstance(repo, 100000);

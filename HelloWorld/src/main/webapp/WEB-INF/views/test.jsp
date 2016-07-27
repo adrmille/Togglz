@@ -3,7 +3,7 @@
 
 <html>
 <head>
-	<title>HELLO WORLD 2.0</title>
+	<title>Togglz Test</title>
 </head>
 <body>
 <h1>

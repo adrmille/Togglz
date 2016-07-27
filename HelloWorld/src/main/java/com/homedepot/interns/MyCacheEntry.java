@@ -2,6 +2,13 @@ package com.homedepot.interns;
 
 import org.togglz.core.repository.FeatureState;
 
+/**
+ * Class for the objects that will be stored in the hashmap that stores the
+ * feature switch values, each attribute is a column in the mysql database table
+ * @author danielle
+ *
+ */
+
 public class MyCacheEntry {
 	
 	private MyFeatureState state;
