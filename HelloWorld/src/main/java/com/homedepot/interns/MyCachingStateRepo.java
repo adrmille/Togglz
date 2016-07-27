@@ -1,8 +1,10 @@
 package com.homedepot.interns;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -12,12 +14,32 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.util.Utils;
+import com.google.api.client.http.HttpBackOffIOExceptionHandler;
+import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.client.util.Sleeper;
+import com.google.api.services.pubsub.Pubsub;
+import com.google.api.services.pubsub.PubsubScopes;
+import com.google.api.services.pubsub.model.PublishRequest;
+import com.google.api.services.pubsub.model.PublishResponse;
+import com.google.api.services.pubsub.model.PubsubMessage;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.mysql.jdbc.PreparedStatement;
+
 
 /**
  * 
@@ -203,10 +225,125 @@ public class MyCachingStateRepo implements StateRepository {
 			}
 
 		}
+		PubSub pubsub = createPubsubClient();
+		String message = "Hello Cloud Pub/Sub!";
+		PubsubMessage pubsubMessage = new PubsubMessage();
+		// You need to base64-encode your message with
+		// PubsubMessage#encodeData() method.
+		pubsubMessage.encodeData(message.getBytes("UTF-8"));
+		List<PubsubMessage> messages = ImmutableList.of(pubsubMessage);
+		PublishRequest publishRequest =
+		        new PublishRequest().setMessages(messages);
+		PublishResponse publishResponse = pubsub.projects().topics()
+		        .publish("projects/deductive-span-135023/topics/Togglz ", publishRequest)
+		        .execute();
+		List<String> messageIds = publishResponse.getMessageIds();
+		if (messageIds != null) {
+		    for (String messageId : messageIds) {
+		        System.out.println("messageId: " + messageId);
+		    }
+		}
 		return featureState;
 
 	}
 
+/**
+ * RetryHttpInitializerWrapper will automatically retry upon RPC
+ * failures, preserving the auto-refresh behavior of the Google
+ * Credentials.
+ */
+public class RetryHttpInitializerWrapper implements HttpRequestInitializer{
+	private static final Logger LOG =
+	        Logger.getLogger(RetryHttpInitializerWrapper.class.getName());
+
+	    // Intercepts the request for filling in the "Authorization"
+	    // header field, as well as recovering from certain unsuccessful
+	    // error codes wherein the Credential must refresh its token for a
+	    // retry.
+	    private final Credential wrappedCredential;
+
+	    // A sleeper; you can replace it with a mock in your test.
+	    private final Sleeper sleeper;
+
+	    public RetryHttpInitializerWrapper(Credential wrappedCredential) {
+	        this(wrappedCredential, Sleeper.DEFAULT);
+	    }
+
+	    // Use only for testing.
+	    RetryHttpInitializerWrapper(
+	            Credential wrappedCredential, Sleeper sleeper) {
+	        this.wrappedCredential = Preconditions.checkNotNull(wrappedCredential);
+	        this.sleeper = sleeper;
+	    }
+
+	    @Override
+	    public void initialize(HttpRequest request) {
+	        request.setReadTimeout(2 * 60000); // 2 minutes read timeout
+	        final HttpUnsuccessfulResponseHandler backoffHandler =
+	            new HttpBackOffUnsuccessfulResponseHandler(
+	                new ExponentialBackOff())
+	                    .setSleeper(sleeper);
+	        request.setInterceptor(wrappedCredential);
+	        request.setUnsuccessfulResponseHandler(
+	                new HttpUnsuccessfulResponseHandler() {
+	                    @Override
+	                    public boolean handleResponse(
+	                            HttpRequest request,
+	                            HttpResponse response,
+	                            boolean supportsRetry) throws IOException {
+	                        if (wrappedCredential.handleResponse(
+	                                request, response, supportsRetry)) {
+	                            // If credential decides it can handle it,
+	                            // the return code or message indicated
+	                            // something specific to authentication,
+	                            // and no backoff is desired.
+	                            return true;
+	                        } else if (backoffHandler.handleResponse(
+	                                request, response, supportsRetry)) {
+	                            // Otherwise, we defer to the judgement of
+	                            // our internal backoff handler.
+	                          LOG.info("Retrying " + request.getUrl());
+	                          return true;
+	                        } else {
+	                            return false;
+	                        }
+	                    }
+	                });
+	        request.setIOExceptionHandler(
+	            new HttpBackOffIOExceptionHandler(new ExponentialBackOff())
+	                .setSleeper(sleeper));
+	    }
+}
+
+	    
+		// Default factory method.
+	    public static Pubsub createPubsubClient() throws IOException {
+	        return createPubsubClient(Utils.getDefaultTransport(),
+	                Utils.getDefaultJsonFactory());
+	    }
+
+	    // A factory method that allows you to use your own HttpTransport
+	    // and JsonFactory.
+	    public static Pubsub createPubsubClient(HttpTransport httpTransport,
+	            JsonFactory jsonFactory) throws IOException {
+	        Preconditions.checkNotNull(httpTransport);
+	        Preconditions.checkNotNull(jsonFactory);
+	        GoogleCredential credential = GoogleCredential.getApplicationDefault(
+	                httpTransport, jsonFactory);
+	        // In some cases, you need to add the scope explicitly.
+	        if (credential.createScopedRequired()) {
+	            credential = credential.createScoped(PubsubScopes.all());
+	        }
+	        // Please use custom HttpRequestInitializer for automatic
+	        // retry upon failures.  We provide a simple reference
+	        // implementation in the "Retry Handling" section.
+	        HttpRequestInitializer initializer =
+	                new RetryHttpInitializerWrapper(credential);
+	        return new Pubsub.Builder(httpTransport, jsonFactory, initializer)
+	               .build();
+	    }
+	  
+	
 	/**
 	 * whenever feature is toggled on or off, the feature state is set again
 	 * and the old entry in the cache is removed
