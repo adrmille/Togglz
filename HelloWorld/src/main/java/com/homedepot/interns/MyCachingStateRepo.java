@@ -1,6 +1,8 @@
 package com.homedepot.interns;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
+
+//import org.apache.log4j;
+//import org.apache.log4j.Logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -20,6 +25,7 @@ import org.togglz.core.repository.StateRepository;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.HttpBackOffIOExceptionHandler;
 import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler;
@@ -29,6 +35,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.client.util.Sleeper;
 import com.google.api.services.pubsub.Pubsub;
@@ -61,9 +68,11 @@ public class MyCachingStateRepo implements StateRepository {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+	private static final String MyCachingStateRepo = null;
+
 	//the primary state repository, in this case the mysql database
 	private final StateRepository delegate;
-
+	private Pubsub pubsub;
 	//the cache that holds all the feature switch values at a certain time,
 	//which can be returned at the end point as a json
 	private final Map<String, CacheEntry> cache = new ConcurrentHashMap<String, CacheEntry>();
@@ -130,7 +139,15 @@ public class MyCachingStateRepo implements StateRepository {
 		if (ttl < 0) {
 			throw new IllegalArgumentException("Negative TTL value: " + ttl);
 		}
-
+		try {
+			pubsub = createPubsubClient();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.delegate = delegate;
 		this.ttl = ttl;
 	}
@@ -150,6 +167,7 @@ public class MyCachingStateRepo implements StateRepository {
 	 */
 	private MyCachingStateRepo(StateRepository delegate, long ttl, TimeUnit ttlTimeUnit) {
 		this(delegate, ttlTimeUnit.toMillis(ttl));
+		
 	}
 
 	
@@ -225,24 +243,8 @@ public class MyCachingStateRepo implements StateRepository {
 			}
 
 		}
-		PubSub pubsub = createPubsubClient();
-		String message = "Hello Cloud Pub/Sub!";
-		PubsubMessage pubsubMessage = new PubsubMessage();
-		// You need to base64-encode your message with
-		// PubsubMessage#encodeData() method.
-		pubsubMessage.encodeData(message.getBytes("UTF-8"));
-		List<PubsubMessage> messages = ImmutableList.of(pubsubMessage);
-		PublishRequest publishRequest =
-		        new PublishRequest().setMessages(messages);
-		PublishResponse publishResponse = pubsub.projects().topics()
-		        .publish("projects/deductive-span-135023/topics/Togglz ", publishRequest)
-		        .execute();
-		List<String> messageIds = publishResponse.getMessageIds();
-		if (messageIds != null) {
-		    for (String messageId : messageIds) {
-		        System.out.println("messageId: " + messageId);
-		    }
-		}
+		
+		
 		return featureState;
 
 	}
@@ -253,8 +255,8 @@ public class MyCachingStateRepo implements StateRepository {
  * Credentials.
  */
 public class RetryHttpInitializerWrapper implements HttpRequestInitializer{
-	private static final Logger LOG =
-	        Logger.getLogger(RetryHttpInitializerWrapper.class.getName());
+//	private final Logger LOG =
+//	        Logger.getLogger(RetryHttpInitializerWrapper.class.getName());
 
 	    // Intercepts the request for filling in the "Authorization"
 	    // header field, as well as recovering from certain unsuccessful
@@ -302,7 +304,7 @@ public class RetryHttpInitializerWrapper implements HttpRequestInitializer{
 	                                request, response, supportsRetry)) {
 	                            // Otherwise, we defer to the judgement of
 	                            // our internal backoff handler.
-	                          LOG.info("Retrying " + request.getUrl());
+	                          //LOG.info("Retrying " + request.getUrl());
 	                          return true;
 	                        } else {
 	                            return false;
@@ -316,32 +318,42 @@ public class RetryHttpInitializerWrapper implements HttpRequestInitializer{
 }
 
 	    
-		// Default factory method.
-	    public static Pubsub createPubsubClient() throws IOException {
-	        return createPubsubClient(Utils.getDefaultTransport(),
-	                Utils.getDefaultJsonFactory());
-	    }
+//		// Default factory method.
+//	    public static Pubsub createPubsubClient() throws IOException {
+//	        return createPubsubClient(Utils.getDefaultTransport(),
+//	                Utils.getDefaultJsonFactory());
+//	    }
+private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+public Pubsub createPubsubClient()
+	    throws IOException, GeneralSecurityException {
+	    HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
+	    GoogleCredential credential = GoogleCredential.getApplicationDefault();
+	    HttpRequestInitializer initializer =
+	        new RetryHttpInitializerWrapper(credential);
+	    return new Pubsub.Builder(transport, JSON_FACTORY, initializer).build();
+	  }
 
 	    // A factory method that allows you to use your own HttpTransport
 	    // and JsonFactory.
-	    public static Pubsub createPubsubClient(HttpTransport httpTransport,
-	            JsonFactory jsonFactory) throws IOException {
-	        Preconditions.checkNotNull(httpTransport);
-	        Preconditions.checkNotNull(jsonFactory);
-	        GoogleCredential credential = GoogleCredential.getApplicationDefault(
-	                httpTransport, jsonFactory);
-	        // In some cases, you need to add the scope explicitly.
-	        if (credential.createScopedRequired()) {
-	            credential = credential.createScoped(PubsubScopes.all());
-	        }
-	        // Please use custom HttpRequestInitializer for automatic
-	        // retry upon failures.  We provide a simple reference
-	        // implementation in the "Retry Handling" section.
-	        HttpRequestInitializer initializer =
-	                new RetryHttpInitializerWrapper(credential);
-	        return new Pubsub.Builder(httpTransport, jsonFactory, initializer)
-	               .build();
-	    }
+//	    public static Pubsub createPubsubClient(HttpTransport httpTransport,
+//	            JsonFactory jsonFactory) throws IOException {
+//	        Preconditions.checkNotNull(httpTransport);
+//	        Preconditions.checkNotNull(jsonFactory);
+//	        GoogleCredential credential = GoogleCredential.getApplicationDefault(
+//	                httpTransport, jsonFactory);
+//	        // In some cases, you need to add the scope explicitly.
+//	        if (credential.createScopedRequired()) {
+//	            credential = credential.createScoped(PubsubScopes.all());
+//	        }
+//	        // Please use custom HttpRequestInitializer for automatic
+//	        // retry upon failures.  We provide a simple reference
+//	        // implementation in the "Retry Handling" section.
+////	       MyCachingStateRepo repo = new MyCachingStateRepo(delegate);
+//	        HttpRequestInitializer initializer =
+//	                new HttpRequestInitializer(credential);
+//	        return new Pubsub.Builder(httpTransport, jsonFactory, initializer)
+//	               .build();
+//	    }
 	  
 	
 	/**
@@ -350,6 +362,34 @@ public class RetryHttpInitializerWrapper implements HttpRequestInitializer{
 	 */
 	@Override
 	public void setFeatureState(FeatureState featureState) {
+		String message = "Hello Cloud Pub/Sub!";
+		PubsubMessage pubsubMessage = new PubsubMessage();
+		// You need to base64-encode your message with
+		// PubsubMessage#encodeData() method.
+		try {
+			pubsubMessage.encodeData(message.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<PubsubMessage> messages = ImmutableList.of(pubsubMessage);
+		PublishRequest publishRequest =
+		        new PublishRequest().setMessages(messages);
+		PublishResponse publishResponse = null;
+		try {
+			publishResponse = pubsub.projects().topics()
+			        .publish("projects/deductive-span-135023/topics/Togglz", publishRequest)
+			        .execute();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<String> messageIds = publishResponse.getMessageIds();
+		if (messageIds != null) {
+		    for (String messageId : messageIds) {
+		        System.out.println("messageId: " + messageId);
+		    }
+		}
 		delegate.setFeatureState(featureState);
 		cache.remove(featureState.getFeature().name());
 	}
