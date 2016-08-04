@@ -50,7 +50,7 @@ public class MyTogglzConfiguration implements TogglzConfig {
 		}
 		
 
-    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "remote", "tester123");
+    	DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
 
     	MyJDBCStateRepo repo = null;
 

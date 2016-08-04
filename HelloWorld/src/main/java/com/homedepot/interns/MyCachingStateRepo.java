@@ -201,7 +201,7 @@ public class MyCachingStateRepo implements StateRepository {
 		 */
 
 		try {
-			DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "remote", "tester123");
+			DataSource source = new DriverManagerDataSource("jdbc:mysql://localhost:3306/togglz", "root", "coolkid");
 			connection = source.getConnection();
 			String sql = "SELECT * FROM TOGGLZ WHERE FEATURE_NAME = '" + feature.name() + "' AND APP_ENV ='live';";
 			statement = (PreparedStatement) connection.prepareStatement(sql);
@@ -362,34 +362,34 @@ public Pubsub createPubsubClient()
 	 */
 	@Override
 	public void setFeatureState(FeatureState featureState) {
-//		String message = "Hello Cloud Pub/Sub!";
-//		PubsubMessage pubsubMessage = new PubsubMessage();
-//		// You need to base64-encode your message with
-//		// PubsubMessage#encodeData() method.
-//		try {
-//			pubsubMessage.encodeData(message.getBytes("UTF-8"));
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		List<PubsubMessage> messages = ImmutableList.of(pubsubMessage);
-//		PublishRequest publishRequest =
-//		        new PublishRequest().setMessages(messages);
-//		PublishResponse publishResponse = null;
-//		try {
-//			publishResponse = pubsub.projects().topics()
-//			        .publish("projects/deductive-span-135023/topics/Togglz", publishRequest)
-//			        .execute();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		List<String> messageIds = publishResponse.getMessageIds();
-//		if (messageIds != null) {
-//		    for (String messageId : messageIds) {
-//		        System.out.println("messageId: " + messageId);
-//		    }
-//		}
+		String message = "Hello Cloud Pub/Sub!";
+		PubsubMessage pubsubMessage = new PubsubMessage();
+		// You need to base64-encode your message with
+		// PubsubMessage#encodeData() method.
+		try {
+			pubsubMessage.encodeData(message.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<PubsubMessage> messages = ImmutableList.of(pubsubMessage);
+		PublishRequest publishRequest =
+		        new PublishRequest().setMessages(messages);
+		PublishResponse publishResponse = null;
+		try {
+			publishResponse = pubsub.projects().topics()
+			        .publish("projects/deductive-span-135023/topics/Togglz", publishRequest)
+			        .execute();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<String> messageIds = publishResponse.getMessageIds();
+		if (messageIds != null) {
+		    for (String messageId : messageIds) {
+		        System.out.println("messageId: " + messageId);
+		    }
+		}
 		delegate.setFeatureState(featureState);
 		cache.remove(featureState.getFeature().name());
 	}
