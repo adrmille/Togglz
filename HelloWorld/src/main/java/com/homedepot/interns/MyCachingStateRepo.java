@@ -387,7 +387,8 @@ public Pubsub createPubsubClient()
 		List<String> messageIds = publishResponse.getMessageIds();
 		if (messageIds != null) {
 		    for (String messageId : messageIds) {
-		        System.out.println("messageId: " + messageId);
+//		        System.out.println("messageId: " + messageId);
+		    	logger.info("Message:"+ messageId + " published to the cloud");
 		    }
 		}
 		delegate.setFeatureState(featureState);
